@@ -11,6 +11,9 @@ import ProfilePicture from "./ProfilePicture";
 import SignUp from './SignUp';
 import TextEditor from "./TextEditor";
 import Logo from "./Logo";
+import Header from './Header';
+import TinyMCE from './TinyMCE'
+import Logout from './Logout';
 
 export {
     AddProfileImg,
@@ -25,5 +28,8 @@ export {
     ProfilePicture,
     SignUp,
     TextEditor,
-    Logo
+    Logo,
+    Header,
+    TinyMCE,
+    Logout
 };

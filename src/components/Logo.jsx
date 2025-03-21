@@ -1,7 +1,13 @@
+import { useNavigate } from "react-router-dom";
+
 const Logo = () => {
+    const navigate = useNavigate();
+    
     return (
         <>
-            <button className="group relative p-2 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none">
+            <button 
+            onClick={() => navigate("/")}
+            className="group relative p-2 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none">
                 <img 
                 className="w-16 h-16 object-cover rounded-full border-2 border-gray-300 shadow-md group-hover:border-blue-500 transition-all duration-300"
                 src="images.png" 

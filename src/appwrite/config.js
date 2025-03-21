@@ -14,7 +14,7 @@ export class Service{
         this.storage = new Storage(this.client);
     }
 
-    async createTweet({user_id, content, media_url, likes, created_at}){
+    async createTweet({slug, user_id, content, media_code, username, profile_code}){
         try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -23,14 +23,32 @@ export class Service{
                 {
                     user_id,
                     content,
-                    media_url,
-                    created_at
+                    media_code,
+                    username,
+                    profile_code
                 }
             );
         } catch (error) {
             console.log("At createTweet, Error: ", error);
         }
-    }
+    };
+
+    async createUsers({slug, username, email, profile_code}){
+        try {
+            return await this.databases.createDocument(
+                conf.appwriteDatabaseId,
+                conf.apwwriteUsersCollectioId,
+                slug,
+                {
+                    username,
+                    email,
+                    profile_code
+                }
+            );
+        } catch (error) {
+            console.log("At createUsers, Error: ", error);
+        }
+    };
 
     async updateLikes(slug, {likes}){
         try{
@@ -63,7 +81,7 @@ export class Service{
         } catch (error) {
             console.log("At updateTweet, Error: ", error);
         }
-    }
+    };
 
     async deleteTweet(slug){
         try {
@@ -77,7 +95,7 @@ export class Service{
             console.log("At deleteTweet, Error: ", error);
             return false;
         }
-    }
+    };
 
     async getPost(slug){
         try {
@@ -90,6 +108,22 @@ export class Service{
             console.log("At getPost, Error: ", error);
             return false;
         }
+    };
+
+    async getUserByEmail(email) {
+        try {
+            const response = await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.apwwriteUsersCollectioId,
+                [Query.equal("email", email)] 
+            );
+
+            console.log(response, email);
+            return response.documents.length ? response.documents[0] : null;
+        } catch (error) {
+            console.log("At getUserByEmail, Error: ", error);
+            return null;
+        }
     }
 
     async getPosts(){
@@ -97,9 +131,6 @@ export class Service{
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteTweetsCollectionId,
-                [
-                    Query.equal('status', 'active')
-                ]
             );
         } catch (error) {
             console.log("At getPosts, Error: ", error);
@@ -149,7 +180,7 @@ export class Service{
             return await this.storage.createFile(
                 conf.appwriteProfileBucketId,
                 ID.unique(),
-                file
+                fileId
             );
         } catch (error) {
             console.log("At uploadFiles, Error: ", error);
