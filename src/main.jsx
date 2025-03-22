@@ -19,6 +19,7 @@ const router = createBrowserRouter(
           <SignUp/>
         </AuthLayout>
       )} />
+      <Route path="profile/:userId" element={<Profile/>} />
     </Route>
   )
 )

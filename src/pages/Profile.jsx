@@ -1,36 +1,77 @@
-import Logo from '../components/Logo';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Profile as ProfileInfo } from '../components/index';
 import Post from '../components/Post';
 import service from '../appwrite/config';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import useTimeAgo from '../hooks/useTimeAgo';
 
 const Profile = () => {
     const [tweets, setTweets] = useState([]);
     const [profileImgCode, setProfileImgCode] = useState('');
     const [mediaImgCode, setMediaImgCode] = useState('');
     const [profileUrl, setProfileUrl] = useState('');
-    const [mediaUrl, setMediaUrl] = useState('');
+    const [postImgUrls, setPostImgUrls] = useState({});
+    const [personalInfo, setPerrsonalInfo] = useState([]);
 
-    //For Storing User Unique ID to Show Specific Data
-    const loginID = useSelector(state => state.auth.userData.$id);
+    const navigate = useNavigate();
+
+    const { userId } = useParams();
 
     useEffect(() => {
-        service.getPosts()
-        .then(posts => {
-            if(posts && (posts.documents.$id == loginID)){
-                //Store the Data of all Posts in form of JSON
-                setTweets(posts.documents);
-                //To get Profile Pictur Code
-                setProfileImgCode(posts.documents.profile_code);
-                //To get Posted Image Code
-                setMediaImgCode(posts.documents.media_code);
+        (
+            async() => {
+                try{
+                    const data = await service.getPosts();
+                    if(data){
+                        const userTweets = data.documents
+                        .filter(tweet => tweet.user_id === userId)
+                        .sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt));
+
+                        setTweets(userTweets);
+                    }
+
+                    const email = `${userId.replace(/@/, '')}@gmail.com`;
+
+                    const user = await service.getUserByEmail(email);
+                    if(user){
+                        setPerrsonalInfo(user);
+                        setProfileImgCode(user.profile_code);
+                    }
+                }catch(error){
+                    console.log(error);
+                }
             }
-        });
+        )()
     }, []);
 
+    const getPostImgPreview = async(code) => {
+        //To get the URL for Posted Image
+        try {
+            const url = await service.getTweetFilePreview(code);
+            return url || "";
+        } catch (err) {
+            console.log("Error fetching post image:", err);
+            return "";
+        }
+    };
+
     useEffect(() => {
+        const fetchPostImages = async () => {
+            const urls = {};
+            for (let tweet of tweets) {
+                if (tweet.media_code) {
+                    urls[tweet.$id] = await getPostImgPreview(tweet.media_code);
+                }
+            }
+            setPostImgUrls(urls);
+        };
+    
+        if (tweets.length > 0) {
+            fetchPostImages();
+        }
+
         //To get Profile Picture URL
         service.getProfileFilePreview(profileImgCode)
         .then(url => {
@@ -41,51 +82,43 @@ const Profile = () => {
         .catch(err => {
             console.log("At Profile: ", err);
         })
-
-        //To get Posted Image URL
-        service.getProfileFilePreview(mediaImgCode)
-        .then(url => {
-            if(url){
-                setMediaUrl(url);
-            }
-        })
-        .catch(err => {
-            console.log("At Profile: ", err);
-        })
-    }, [profileUrl, mediaUrl]);
+    }, [mediaImgCode, profileImgCode]);
 
     return (
-        <div>
-            <div>
-                <Logo/>
-            </div>
-            <div>
-                <div>
-                    <button>
-                        <IoMdArrowRoundBack />
+        <div className='min-h-screen bg-gray-100'>
+            <div className='bg-white shadow-md py-4'>
+                <div className="container mx-auto flex justify-between items-center px-6">
+                    <button onClick={() => navigate(-1)} className="flex items-center text-gray-600 hover:text-gray-900">
+                        <IoMdArrowRoundBack size={24} className="mr-2" />
+                        Back
                     </button>
                 </div>
+            </div>
+            <div className='max-w-2xl mx-auto bg-white mt-6 shadow-md rounded-lg p-6'>
                 <div>
-                    {
-                        tweets.map(tweet => tweet.$id == loginID ? (
-                            <ProfileInfo src={profileUrl} alt="Profile Img" name={tweet.username} id={tweet.user_id} key={tweet.$id}/>
-                        ) : "")
-                    }
+                    <ProfileInfo src={profileUrl} alt="Profile Img" name={personalInfo.username} id={userId} key={personalInfo.$id}/>
                 </div>
-                <div>
+                <div className='max-w-2xl mx-auto mt-6'> 
                     {
-                        tweets.map(tweet => (
-                            <div key={tweet.$id}>
-                                <Post 
-                                src={profileUrl} 
-                                userName={tweet.username} 
-                                userId={tweet.user_id} 
-                                createdAt={tweet.$updatedAt} 
-                                context={tweet.content} 
-                                postImgSrc={mediaUrl}
-                                likes={tweet.likes} />
-                            </div>
-                        ))
+                        tweets.length > 0 ? (
+                            tweets.map(tweet => tweet.user_id == userId ? (
+                                <div 
+                                key={tweet.$id} 
+                                className='bg-white p-5 rounded-lg shadow-md mb-4'>
+                                    <Post 
+                                    imgCode={tweet.profile_code} 
+                                    userName={tweet.username} 
+                                    userId={tweet.user_id} 
+                                    createdAt={useTimeAgo(tweet.$updatedAt)} 
+                                    context={tweet.content} 
+                                    postImgSrc={postImgUrls[tweet.$id] || ""}
+                                    likes={tweet.likes}
+                                    id={tweet.$id} />
+                                </div>
+                            ) : "")
+                        ) : (
+                            <p className="text-center text-gray-500">No posts available</p>
+                        )
                     }
                 </div>
             </div>

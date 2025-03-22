@@ -14,6 +14,7 @@ import Logo from "./Logo";
 import Header from './Header';
 import TinyMCE from './TinyMCE'
 import Logout from './Logout';
+import DislikeBtn from './DislikeBtn';
 
 export {
     AddProfileImg,
@@ -31,5 +32,6 @@ export {
     Logo,
     Header,
     TinyMCE,
-    Logout
+    Logout,
+    DislikeBtn
 };

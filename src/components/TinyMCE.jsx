@@ -1,6 +1,5 @@
 import { Editor } from '@tinymce/tinymce-react';
 import conf from '../conf/conf';
-import Button from './Button';
 import { Controller } from 'react-hook-form';
 
 const TinyMCE = ({control, defaultValue}) => {
@@ -8,8 +7,9 @@ const TinyMCE = ({control, defaultValue}) => {
         <Controller
         name='content'
         control={control}
-        render={({ field: { onChange } }) => (
+        render={({ field: { onChange, value } }) => (
             <Editor
+            value={value}
             initialValue={defaultValue}
             readOnly={false}
             onEditorChange={onChange}

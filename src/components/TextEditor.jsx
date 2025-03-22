@@ -4,17 +4,18 @@ import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import service from '../appwrite/config';
 import { ID } from 'appwrite';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const TextEditor = () => {
     const [imgUrl, setImgUrl] = useState('');
     const [imgCode, setImgCode] = useState('');
+    const [testUpload, setTestUpload] = useState(false);
 
     const navigate = useNavigate();
     const storedUser = JSON.parse(localStorage.getItem("userData"));
     const userData = storedUser || useSelector(state => state.auth.userData);
 
-    const { register, handleSubmit, setValue, control, watch, getValues, reset } = useForm({
+    const { register, handleSubmit, setValue, control, getValues, reset } = useForm({
         defaultValues: {
             content: ""
         }
@@ -22,19 +23,27 @@ const TextEditor = () => {
 
     const submit = async(data) => {
         const user = await service.getUserByEmail(userData.email);
-        
-        const dbPost = await service.createTweet({
-            slug: ID.unique(),
-            user_id: `@${userData.email.replace(/@(.*)/, "")}`,
-            content: data.content,
-            media_code: imgCode,
-            username: userData.name,
-            profile_code: user.profile_code
-        });
 
-        reset({ content: "", image: "" }); 
-        setImgCode(""); 
-        setImgUrl(""); 
+        if(user){
+            const dbPost = await service.createTweet({
+                slug: ID.unique(),
+                user_id: `@${userData.email.replace(/@(.*)/, "")}`,
+                content: data.content,
+                media_code: imgCode,
+                username: userData.name,
+                profile_code: user.profile_code
+            });
+    
+            reset({ content: "", image: "" }); 
+            setValue("content", "");
+            setImgCode(""); 
+            setImgUrl(""); 
+
+            if(testUpload && dbPost){
+                navigate('/');
+                window.location.reload();
+            }
+        }
     };
 
     const handleImagePreview = async(event) => {
@@ -53,6 +62,7 @@ const TextEditor = () => {
         }
 
         const fileId = await service.uploadTweetFile(file);
+        setTestUpload(true);
         setImgCode(fileId.$id);
     };
 
@@ -89,8 +99,8 @@ const TextEditor = () => {
                             })
                         }
                         onChange={(e) => {
-                            handleImagePreview(e); // Show preview before upload
-                            setValue("image", e.target.files); // Store file in form state
+                            handleImagePreview(e); 
+                            setValue("image", e.target.files);
                         }} />
                     </div>
                     <Button 

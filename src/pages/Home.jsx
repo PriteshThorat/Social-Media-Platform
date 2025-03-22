@@ -4,40 +4,78 @@ import service from '../appwrite/config';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import useTimeAgo from '../hooks/useTimeAgo';
 
 const Home = () => {
     const [tweets, setTweets] = useState([]);
+    const [imgCode, setImgCode] = useState('');
+    const [postImgUrls, setPostImgUrls] = useState({});
+
     const navigate = useNavigate();
 
     const status = useSelector(state => state.auth.status);
+    const userData = useSelector(state => state.auth.userData);
+
+    const data = async(email) => {
+        return await service.getUserByEmail(email);
+    }
 
     useEffect(() => {
-        
+        if(!status){
+            navigate('/login');
+        }
+
         service.getPosts()
         .then(posts => {
             if(posts){
                 //Store the Data of all Posts in form of JSON
-                setTweets(posts.documents);
+                const userTweets = posts.documents
+                .sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt));
+
+                setTweets(userTweets);
             }
         });
 
-        if(!status){
-            navigate('/login');
+        if(userData){
+            (async () => {
+                try {
+                    const user = await data(userData.email);
+
+                    if (user) {
+                        setImgCode(user.profile_code);
+                    }
+                } catch (err) {
+                    console.error("Error fetching user data:", err);
+                }
+            })();
         }
     }, []);
 
-    const getImgPreview = (code) => {
-        //To get the URL for Profile Image and Posted Image
-        service.getProfileFilePreview(code)
-        .then(url => {
-            if(url){
-                return url;
+    useEffect(() => {
+        const fetchPostImages = async () => {
+            const urls = {};
+            for (let tweet of tweets) {
+                if (tweet.media_code) {
+                    urls[tweet.$id] = await getPostImgPreview(tweet.media_code);
+                }
             }
-        })
-        .catch(err => {
-            console.log("At src\page\Home: ", err);
+            setPostImgUrls(urls);
+        };
+    
+        if (tweets.length > 0) {
+            fetchPostImages();
+        }
+    }, [tweets]);
+
+    const getPostImgPreview = async(code) => {
+        //To get the URL for Posted Image
+        try {
+            const url = await service.getTweetFilePreview(code);
+            return url || "";
+        } catch (err) {
+            console.log("Error fetching post image:", err);
             return "";
-        });
+        }
     };
     
     return (
@@ -54,13 +92,14 @@ const Home = () => {
                             className='bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300'
                             key={tweet.$id}>
                                 <Post 
-                                src={getImgPreview(tweet.profile_code)} 
+                                imgCode={tweet.profile_code} 
                                 userName={tweet.username} 
                                 userId={tweet.user_id} 
-                                createdAt={tweet.$updatedAt} 
+                                createdAt={useTimeAgo(tweet.$updatedAt)} 
                                 context={tweet.content} 
-                                postImgSrc={getImgPreview(tweet.media_code)}
-                                likes={tweet.likes} />
+                                postImgSrc={postImgUrls[tweet.$id] || ""}
+                                likes={tweet.likes}
+                                id={tweet.$id} />
                             </div>
                     ))
                 ) : (

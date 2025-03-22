@@ -50,6 +50,21 @@ export class Service{
         }
     };
 
+    async updateLikedTweets(slug, {likedTweet}){
+        try{
+            return await this.databases.updateDocument(
+                conf.appwriteDatabaseId,
+                conf.apwwriteUsersCollectioId,
+                slug,
+                {
+                    likedTweet
+                }
+            );
+        }catch(error){
+            console.log("At updateLikedTweets, Error: ", error);
+        }
+    }
+
     async updateLikes(slug, {likes}){
         try{
             return await this.databases.updateDocument(
@@ -97,6 +112,19 @@ export class Service{
         }
     };
 
+    async getUsers(slug){
+        try {
+            return await this.databases.getDocument(
+                conf.appwriteDatabaseId,
+                conf.apwwriteUsersCollectioId,
+                slug
+            )
+        } catch (error) {
+            console.log("At getPost, Error: ", error);
+            return false;
+        }
+    };
+
     async getPost(slug){
         try {
             return await this.databases.getDocument(
@@ -117,8 +145,7 @@ export class Service{
                 conf.apwwriteUsersCollectioId,
                 [Query.equal("email", email)] 
             );
-
-            console.log(response, email);
+            
             return response.documents.length ? response.documents[0] : null;
         } catch (error) {
             console.log("At getUserByEmail, Error: ", error);

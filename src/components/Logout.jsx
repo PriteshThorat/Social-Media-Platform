@@ -15,6 +15,9 @@ const Logout = () => {
             dispatch(logout());
             navigate('/login');
         });
+
+        localStorage.removeItem("fileCode"); 
+        localStorage.removeItem("userData"); 
     };
 
     return (

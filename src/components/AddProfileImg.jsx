@@ -24,24 +24,27 @@ const AddProfileImg = () => {
     const add = async(e) => {
         e.preventDefault();
 
-        try{
-            const account = await config.createUsers({
-                slug: ID.unique(),
-                username: userData.name,
-                email: userData.email,
-                profile_code: fileCode.$id
-            });
-
-            if(account){
-                dispatch(set({
+        if(fileCode){
+            console.log('2', fileCode.$id);
+            try{
+                const account = await config.createUsers({
+                    slug: ID.unique(),
                     username: userData.name,
                     email: userData.email,
-                    profiel_code: fileCode.$id
-                }));
-                navigate("/");
+                    profile_code: fileCode.$id
+                });
+    
+                if(account){
+                    dispatch(set({
+                        username: userData.name,
+                        email: userData.email,
+                        profile_code: fileCode.$id
+                    }));
+                    navigate("/");
+                }
+            }catch(error){
+                console.log(error);
             }
-        }catch(error){
-            console.log(error);
         }
     };
 
@@ -49,7 +52,7 @@ const AddProfileImg = () => {
         if (e.target.files.length > 0) {
             const file = e.target.files[0];
             const fileData = await config.uploadProfileFile(file);
-
+            console.log('1', fileData.$id);
             localStorage.setItem("fileCode", JSON.stringify(fileData));
         }
     };

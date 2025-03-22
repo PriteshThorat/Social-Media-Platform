@@ -1,11 +1,15 @@
 import { Header } from './components/index';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 const Layout = () => {
+    const location = useLocation();
+
+    const isProfilePage = location.pathname.startsWith("/profile/");
+
     return (
         <>
-            <Header/>
-            <Outlet/>
+            {!isProfilePage && <Header/>}
+            <Outlet />
         </>
     );
 };
