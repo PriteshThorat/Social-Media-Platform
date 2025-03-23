@@ -20,10 +20,11 @@ const SignUp = ({}) => {
         try{
             const account = await authService.createAccount(data);
 
-            console.log(userData);
+            console.log(account);
             if(account){
                 const userData = await authService.getCurrentUser();
 
+                console.log(userData);
                 if(userData){
                     dispatch(authLogin(userData));
 
