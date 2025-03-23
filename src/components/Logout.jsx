@@ -26,7 +26,7 @@ const Logout = () => {
         onSubmit={logoutSession}>
             <Button 
             text="Logout" 
-            className='bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-300 shadow-md' 
+            className='bg-red-500 dark:bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-600 dark:hover:bg-red-700 transition duration-300 shadow-md' 
             type="submit"/>
         </form>
     );

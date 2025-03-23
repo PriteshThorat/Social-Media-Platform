@@ -85,16 +85,16 @@ const Profile = () => {
     }, [mediaImgCode, profileImgCode]);
 
     return (
-        <div className='min-h-screen bg-gray-100'>
-            <div className='bg-white shadow-md py-4'>
+        <div className='min-h-screen bg-gray-100 dark:bg-gray-900'>
+            <div className='bg-white dark:bg-gray-800 shadow-md py-4'>
                 <div className="container mx-auto flex justify-between items-center px-6">
-                    <button onClick={() => navigate(-1)} className="flex items-center text-gray-600 hover:text-gray-900">
+                    <button onClick={() => navigate(-1)} className="flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                         <IoMdArrowRoundBack size={24} className="mr-2" />
                         Back
                     </button>
                 </div>
             </div>
-            <div className='max-w-2xl mx-auto bg-white mt-6 shadow-md rounded-lg p-6'>
+            <div className='max-w-2xl mx-auto bg-white dark:bg-gray-800 mt-6 shadow-md rounded-lg p-6'>
                 <div>
                     <ProfileInfo src={profileUrl} alt="Profile Img" name={personalInfo.username} id={userId} key={personalInfo.$id}/>
                 </div>
@@ -104,7 +104,7 @@ const Profile = () => {
                             tweets.map(tweet => tweet.user_id == userId ? (
                                 <div 
                                 key={tweet.$id} 
-                                className='bg-white p-5 rounded-lg shadow-md mb-4'>
+                                className='bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md mb-4'>
                                     <Post 
                                     imgCode={tweet.profile_code} 
                                     userName={tweet.username} 
@@ -117,7 +117,7 @@ const Profile = () => {
                                 </div>
                             ) : "")
                         ) : (
-                            <p className="text-center text-gray-500">No posts available</p>
+                            <p className="text-center text-gray-500 dark:text-gray-400">No posts available</p>
                         )
                     }
                 </div>

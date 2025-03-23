@@ -69,23 +69,23 @@ const TextEditor = () => {
     return (
         <form 
         onSubmit={handleSubmit(submit)}
-        className='bg-white/30 backdrop-blur-md shadow-lg rounded-lg p-6 w-full max-w-xl mx-auto mt-8 border border-gray-200'>
-            <div className='bg-white rounded-lg shadow-md p-4 w-full max-w-xl mx-auto'>
+        className='bg-white/30 dark:bg-gray-800 dark:bg-opacity-30 backdrop-blur-md shadow-lg rounded-lg p-6 w-full max-w-xl mx-auto mt-8 border border-gray-200 dark:border-gray-700'>
+            <div className='bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 w-full max-w-xl mx-auto'>
                 <TinyMCE 
                 name="content"
                 control={control} 
                 defaultValue={getValues('content')} />
                 {
                     imgUrl && (
-                        <div>
-                            <img src={imgUrl} alt="Posted Image"/>
+                        <div className='mt-4'>
+                            <img src={imgUrl} alt="Posted Image" className='rounded-lg'/>
                         </div>
                     )
                 }
                 <div className='mt-4 flex items-center space-x-4'>
                     <div className="flex-1">
                         <label 
-                        className="block text-sm font-medium text-gray-700 mb-1">
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Upload Image
                         </label>
                         <InputBox 

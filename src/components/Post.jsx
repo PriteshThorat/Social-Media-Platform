@@ -80,35 +80,35 @@ const Post = ({imgCode, userName, userId, createdAt, context, postImgSrc, likes,
 
     return (
         <>
-            <div className="bg-white rounded-lg shadow-md p-4 max-w-lg mx-auto my-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 max-w-lg mx-auto my-4">
                 <div className="flex items-center gap-3">
                     <Link to={`/profile/${userId}`} >
                         <ProfilePicture 
                         src={imgUrl} 
                         alt="" 
-                        className="w-12 h-12 border border-gray-400 shadow-sm"/>
+                        className="w-12 h-12 border border-gray-400 dark:border-gray-600 shadow-sm"/>
                     </Link>
                     <div>
-                        <div className="flex items-center gap-2 text-gray-700 text-sm">
+                        <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
                             <div 
                             className="font-semibold" >
                                 {userName}
                             </div>
                             <span 
-                            className="text-gray-500" >
+                            className="text-gray-500 dark:text-gray-400" >
                                 {userId}
                             </span>
                             <span 
-                            className="text-gray-400">
+                            className="text-gray-400 dark:text-gray-500">
                                 •
                             </span>
                             <p 
-                            className="text-gray-500">
+                            className="text-gray-500 dark:text-gray-400">
                                 {createdAt}
                             </p>
                         </div>
                         <div
-                        className="text-gray-800 mt-1" >
+                        className="text-gray-800 dark:text-gray-200 mt-1" >
                             {parse(context)}
                         </div>
                     </div>

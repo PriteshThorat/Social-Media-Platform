@@ -7,7 +7,7 @@ const DislikeBtn = ({likes}) => {
         type="onSubmit" >
             <FaRegHeart className="text-2xl"/>
             <p 
-            className="text-lg font-semibold text-gray-700">
+            className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                 {likes}
             </p>
         </button>

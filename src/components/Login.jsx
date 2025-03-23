@@ -35,23 +35,23 @@ const Login = () => {
 
     return (
         <>
-            <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
+            <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900'>
                 <h1 
-                className='text-4xl font-extrabold text-gray-800 mb-4 tracking-wide' >
+                className='text-4xl font-extrabold text-gray-800 dark:text-gray-200 mb-4 tracking-wide' >
                     Get Started
                 </h1>
                 <p 
-                className='mb-6 text-gray-600 text-lg'>
+                className='mb-6 text-gray-600 dark:text-gray-400 text-lg'>
                     Not Created Account yet?   
                     <Link
                     to="/signup"
-                    className='text-blue-500 font-semibold hover:underline cursor-pointer'>
+                    className='text-blue-500 dark:text-blue-400 font-semibold hover:underline cursor-pointer'>
                         Sign up
                     </Link>
                 </p>
                 <form
                 onSubmit={handleSubmit(login)} >
-                    <div className='w-full max-w-xs bg-white p-6 rounded-lg shadow-lg'>
+                    <div className='w-full max-w-xs bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
                         <Label 
                         text="Email"
                         fontSize="20px" />
@@ -60,7 +60,7 @@ const Login = () => {
                         height='20px'
                         width='20px'
                         type="email"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         {
                             ...register("email", {
                                 required: true,
@@ -81,7 +81,7 @@ const Login = () => {
                         height='20px'
                         width='20px'
                         type="password"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         {
                             ...register("password", {
                                 required: true
@@ -91,7 +91,7 @@ const Login = () => {
                         text="Log in"
                         height="20px"
                         width="20px"
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition duration-300 shadow-md"
+                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition duration-300 shadow-md"
                         type="submit" />
                     </div>
                 </form>

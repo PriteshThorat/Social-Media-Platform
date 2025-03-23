@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './App.css'
 import { useEffect, useState } from 'react';
 import Layout from './Layout';
@@ -9,6 +9,14 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
+
+  const themeMode = useSelector((state) => state.theme.themeMode);
+
+  useEffect(() => {
+    console.log(themeMode);
+    document.querySelector("html").classList.remove("light", "dark");
+    document.querySelector("html").classList.add(themeMode);
+  }, [themeMode]);
 
   useEffect(() => {
     authService.getCurrentUser()
