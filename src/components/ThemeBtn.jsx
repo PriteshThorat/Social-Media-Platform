@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { MdDarkMode } from "react-icons/md";
 import { MdOutlineDarkMode } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";

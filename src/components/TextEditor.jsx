@@ -24,6 +24,7 @@ const TextEditor = () => {
     const submit = async(data) => {
         const user = await service.getUserByEmail(userData.email);
 
+        console.log(user);
         if(user){
             const dbPost = await service.createTweet({
                 slug: ID.unique(),
@@ -33,16 +34,15 @@ const TextEditor = () => {
                 username: userData.name,
                 profile_code: user.profile_code
             });
+            console.log(dbPost);
     
             reset({ content: "", image: "" }); 
             setValue("content", "");
             setImgCode(""); 
             setImgUrl(""); 
 
-            if(testUpload && dbPost){
-                navigate('/');
-                window.location.reload();
-            }
+            console.log("Here");
+            navigate("/");
         }
     };
 
@@ -69,8 +69,8 @@ const TextEditor = () => {
     return (
         <form 
         onSubmit={handleSubmit(submit)}
-        className='bg-white/30 dark:bg-gray-800 dark:bg-opacity-30 backdrop-blur-md shadow-lg rounded-lg p-6 w-full max-w-xl mx-auto mt-8 border border-gray-200 dark:border-gray-700'>
-            <div className='bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 w-full max-w-xl mx-auto'>
+        className='bg-white/30 dark:bg-gray-800 dark:bg-opacity-30 backdrop-blur-md shadow-lg rounded-lg p-6 w-full max-w-full sm:max-w-3xl mx-auto mt-8 border border-gray-200 dark:border-gray-700 px-4'>
+            <div className='bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 w-full mx-auto'>
                 <TinyMCE 
                 name="content"
                 control={control} 
@@ -78,12 +78,12 @@ const TextEditor = () => {
                 {
                     imgUrl && (
                         <div className='mt-4'>
-                            <img src={imgUrl} alt="Posted Image" className='rounded-lg'/>
+                            <img src={imgUrl} alt="Posted Image" className='rounded-lg w-full'/>
                         </div>
                     )
                 }
-                <div className='mt-4 flex items-center space-x-4'>
-                    <div className="flex-1">
+                <div className='mt-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4'>
+                    <div className="w-full">
                         <label 
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Upload Image
@@ -91,7 +91,7 @@ const TextEditor = () => {
                         <InputBox 
                         placeholder="" 
                         type="file" 
-                        className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
                         accept="image/png, image/jpg, image/jpeg, image/gif"
                         {
                             ...register("image", {
@@ -105,7 +105,7 @@ const TextEditor = () => {
                     </div>
                     <Button 
                     text="Post" 
-                    className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105" type="submit"/>
+                    className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105" type="submit"/>
                 </div>
             </div>
         </form>

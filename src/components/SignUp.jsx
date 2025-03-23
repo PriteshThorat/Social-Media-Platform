@@ -20,15 +20,16 @@ const SignUp = ({}) => {
         try{
             const account = await authService.createAccount(data);
 
+            console.log(userData);
             if(account){
                 const userData = await authService.getCurrentUser();
 
                 if(userData){
                     dispatch(authLogin(userData));
-                }
 
-                localStorage.setItem("userData", JSON.stringify(userData));
-                navigate("/adddp");
+                    localStorage.setItem("userData", JSON.stringify(userData));
+                    navigate("/adddp");
+                }
             }
         }catch(error){
             setError(error.message);

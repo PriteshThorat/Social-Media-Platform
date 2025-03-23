@@ -37,18 +37,44 @@ const Post = ({imgCode, userName, userId, createdAt, context, postImgSrc, likes,
         const fetchUser = async () => {
             const email = `${userId.replace(/@/, '')}@gmail.com`;
             const user = await service.getUserByEmail(email);
-
+    
             if (user) {
                 let likedTweets = user.likedTweet || [];
                 setToggle(likedTweets.includes(id));
             }
         };
-
+    
         fetchUser();
-    }, [id, userId]);
+    }, [userId, id]);
 
     const updateLikes = async(e) => {
         e.preventDefault();
+        const email = `${userId.replace(/@/, '')}@gmail.com`;
+        const user = await service.getUserByEmail(email);
+        if (user) {
+            // Assume you've fetched the post's current likes count in updatedLikes.
+            let newGlobalLikes;
+            let likedTo = user.likedTweet || [];
+
+            if (!likedTo.includes(id)) {
+                // User likes the post.
+                likedTo.push(id);
+                newGlobalLikes = updatedLikes + 1;
+                setToggle(true);
+            } else {
+                // User unlikes the post.
+                likedTo = likedTo.filter(uid => uid !== id);
+                newGlobalLikes = Math.max(updatedLikes - 1, 0);
+                setToggle(false);
+            }
+
+            // Update the user's liked tweets list in their profile if needed.
+            await service.updateLikedTweets(user.$id, { likedTweet: likedTo });
+            // Update the global likes field for the post.
+            const data = await service.updateLikes(id, { likes: newGlobalLikes });
+            if (data) setUpdatedLikes(newGlobalLikes);
+        }
+        /*e.preventDefault();
 
         const email = `${userId.replace(/@/, '')}@gmail.com`;
         const user = await service.getUserByEmail(email);
@@ -75,21 +101,21 @@ const Post = ({imgCode, userName, userId, createdAt, context, postImgSrc, likes,
                 const data = await service.updateLikes(id, { likes: newLikes });
 
                 if (data) setUpdatedLikes(newLikes);
-        }
+        }*/
     };
 
     return (
         <>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 max-w-lg mx-auto my-4">
-                <div className="flex items-center gap-3">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 sm:p-4 w-full max-w-xl mx-auto my-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <Link to={`/profile/${userId}`} >
                         <ProfilePicture 
                         src={imgUrl} 
                         alt="" 
                         className="w-12 h-12 border border-gray-400 dark:border-gray-600 shadow-sm"/>
                     </Link>
-                    <div>
-                        <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
+                    <div className="w-full">
+                        <div className="flex flex-wrap items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
                             <div 
                             className="font-semibold" >
                                 {userName}

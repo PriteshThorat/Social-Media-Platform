@@ -22,6 +22,7 @@ export class AuthService {
             }
         } catch (error) {
             console.log("At createAccount, Error: ", error);
+            alert(error.message);
         }
     }
 
@@ -30,6 +31,7 @@ export class AuthService {
             return await this.account.createEmailPasswordSession(email, password);
         } catch (error) {
             console.log("At login, Error: ", error);
+            alert(error.message);
             return false;
         }
     }

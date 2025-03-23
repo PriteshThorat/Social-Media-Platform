@@ -80,16 +80,17 @@ const Home = () => {
     
     return (
         <div 
-        className='min-h-screen bg-gray-100 dark:bg-gray-900'>
+        className='min-h-screen bg-gray-100 dark:bg-gray-900 px-4'>
             <div 
-            className='bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 mx-auto mt-5 w-full max-w-2xl'>
+            className='bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 mx-auto mt-5 w-full max-w-3xl'>
                 <TextEditor/>
             </div>
             {
                 (tweets.length > 0) ? (
-                    tweets.map(tweet => (
+                    <div className="flex flex-col gap-6 items-center mt-5">
+                    {tweets.map(tweet => (
                             <div 
-                            className='bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300'
+                            className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-full sm:max-w-2xl min-h-[250px]'
                             key={tweet.$id}>
                                 <Post 
                                 imgCode={tweet.profile_code} 
@@ -101,7 +102,8 @@ const Home = () => {
                                 likes={tweet.likes}
                                 id={tweet.$id} />
                             </div>
-                    ))
+                    ))}
+                    </div>
                 ) : (
                     <p 
                     className='text-gray-500 dark:text-gray-400 text-center mt-10'>

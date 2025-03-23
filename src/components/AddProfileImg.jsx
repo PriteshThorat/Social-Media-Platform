@@ -33,6 +33,7 @@ const AddProfileImg = () => {
                     email: userData.email,
                     profile_code: fileCode.$id
                 });
+                console.log(account);
     
                 if(account){
                     dispatch(set({

@@ -13,7 +13,6 @@ function App() {
   const themeMode = useSelector((state) => state.theme.themeMode);
 
   useEffect(() => {
-    console.log(themeMode);
     document.querySelector("html").classList.remove("light", "dark");
     document.querySelector("html").classList.add(themeMode);
   }, [themeMode]);
