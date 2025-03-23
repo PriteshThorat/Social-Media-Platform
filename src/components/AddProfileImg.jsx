@@ -59,9 +59,11 @@ const AddProfileImg = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-            <form onSubmit={add}>
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md max-w-sm mx-auto text-center">
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4">
+            <form 
+            onSubmit={add} 
+            className="w-full max-w-sm">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Add Profile Picture</h2>
                     <p 
                     className="text-gray-500 dark:text-gray-400 mb-4">
@@ -76,7 +78,7 @@ const AddProfileImg = () => {
                                 <ProfilePicture 
                                 src={previewUrl} 
                                 alt="Add DP" 
-                                className="w-26 h-26 border-4 border-blue-500 shadow-lg"/>
+                                className="w-24 h-24 border-4 border-blue-500 shadow-lg"/>
                             ) : (
                                 <svg 
                                 className="w-12 h-12 text-gray-400 dark:text-gray-500 mb-2" 
@@ -93,7 +95,7 @@ const AddProfileImg = () => {
                             )
                         }
                     </label>
-                    <span className="text-gray-600 dark:text-gray-400">Click to upload</span>
+                    <span className="text-gray-600 dark:text-gray-400 block mt-2">Click to upload</span>
                     <input 
                     id="upload" 
                     type="file" 

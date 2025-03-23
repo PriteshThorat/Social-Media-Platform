@@ -35,13 +35,13 @@ const Login = () => {
 
     return (
         <>
-            <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900'>
+            <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4'>
                 <h1 
-                className='text-4xl font-extrabold text-gray-800 dark:text-gray-200 mb-4 tracking-wide' >
+                className='text-xl sm:text-2xl md:text-4xl font-extrabold text-gray-800 dark:text-gray-200 mb-4 tracking-wide text-center' >
                     Get Started
                 </h1>
                 <p 
-                className='mb-6 text-gray-600 dark:text-gray-400 text-lg'>
+                className='mb-6 text-gray-600 dark:text-gray-400 text-sm sm:text-lg text-center'>
                     Not Created Account yet?   
                     <Link
                     to="/signup"
@@ -50,8 +50,9 @@ const Login = () => {
                     </Link>
                 </p>
                 <form
-                onSubmit={handleSubmit(login)} >
-                    <div className='w-full max-w-xs bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
+                onSubmit={handleSubmit(login)}
+                className='w-full max-w-sm' >
+                    <div className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
                         <Label 
                         text="Email"
                         fontSize="20px" />

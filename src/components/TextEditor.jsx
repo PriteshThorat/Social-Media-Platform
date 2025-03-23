@@ -41,8 +41,7 @@ const TextEditor = () => {
             setImgCode(""); 
             setImgUrl(""); 
 
-            console.log("Here");
-            navigate("/");
+            navigate(0);
         }
     };
 
@@ -62,7 +61,6 @@ const TextEditor = () => {
         }
 
         const fileId = await service.uploadTweetFile(file);
-        setTestUpload(true);
         setImgCode(fileId.$id);
     };
 

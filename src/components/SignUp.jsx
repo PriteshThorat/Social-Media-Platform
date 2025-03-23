@@ -38,13 +38,13 @@ const SignUp = ({}) => {
 
     return (
         <>
-            <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900'>
+            <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4'>
                 <h1 
-                className='text-4xl font-extrabold text-gray-800 dark:text-gray-200 mb-4 tracking-wide' >
+                className='text-xl sm:text-2xl md:text-4xl font-extrabold text-gray-800 dark:text-gray-200 mb-4 tracking-wide text-center' >
                     Create Account
                 </h1>
                 <p 
-                className='mb-6 text-gray-600 dark:text-gray-400 text-lg'>
+                className='mb-6 text-gray-600 dark:text-gray-400 text-sm sm:text-lg text-center'>
                     Already have an account? 
                     <Link
                     to="/login"
@@ -52,8 +52,10 @@ const SignUp = ({}) => {
                         Sign in
                     </Link>
                 </p>
-                <form onSubmit={handleSubmit(signup)}>
-                    <div className='w-full max-w-xs bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
+                <form 
+                className="w-full max-w-sm"
+                onSubmit={handleSubmit(signup)}>
+                    <div className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
                         <Label 
                         text="Enter Name"
                         fontSize="20px" />
