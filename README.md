@@ -1,12 +1,24 @@
-# React + Vite
+# Twitter Clone
+This is a Twitter-like social media platform built with React, Redux, and Appwrite. The project allows users to sign up, log in, create posts, view others' posts, and interact with them.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Features
 
-Currently, two official plugins are available:
+- **User Authentication**: Sign up, log in, and manage user sessions.
+- **Post Creation**: Users can create and share tweets with text and images.
+- **Profile Management**: View and edit user profiles.
+- **Interactive Feed**: Display a real-time feed of posts.
+- **Likes**: Engage with posts through likes.
+- **Media Uploads**: Upload profile pictures and post images.
+- **Responsive Design**: Mobile-friendly layout.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technologies Used
 
-## Expanding the ESLint configuration
+- **React**: Frontend framework for UI.
+- **Redux**: State management.
+- **Appwrite**: Backend as a service for authentication, database, and file storage.
+- **Tailwind CSS**: Styling and responsive design.
+- **React Router**: Navigation and routing.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Deployed Website
+
+You can check out the live version here: [Live Demo](https://social-media-platform-seven-orpin.vercel.app/).
