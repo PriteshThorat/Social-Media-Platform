@@ -5,7 +5,7 @@ This is a Twitter-like social media platform built with React, Redux, and Appwri
 
 - **User Authentication**: Sign up, log in, and manage user sessions.
 - **Post Creation**: Users can create and share tweets with text and images.
-- **Profile Management**: View and edit user profiles.
+- **Profile Management**: View user profiles.
 - **Interactive Feed**: Display a real-time feed of posts.
 - **Likes**: Engage with posts through likes.
 - **Media Uploads**: Upload profile pictures and post images.
