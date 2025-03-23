@@ -11,19 +11,21 @@ import { ID } from 'appwrite';
 const AddProfileImg = () => {
     const navigate = useNavigate();
 
+    const [fileData, setFileData] = useState('');
+    const [previewUrl, setPreviewUrl] = useState('');
+
     const storedUser = JSON.parse(localStorage.getItem("userData"));
-    const fileCode = JSON.parse(localStorage.getItem("fileCode"));
+    const fileCode = fileData || JSON.parse(localStorage.getItem("fileCode"));
 
     const userData = storedUser || useSelector(state => state.auth.userData);
     const dispatch = useDispatch();
-
-    const [previewUrl, setPreviewUrl] = useState('');
 
     const { register } = useForm();
 
     const add = async(e) => {
         e.preventDefault();
 
+        console.log(fileCode);
         if(fileCode){
             console.log('2', fileCode.$id);
             try{
@@ -55,6 +57,7 @@ const AddProfileImg = () => {
             const fileData = await config.uploadProfileFile(file);
             console.log('1', fileData.$id);
             localStorage.setItem("fileCode", JSON.stringify(fileData));
+            setFileData(fileData);
         }
     };
 
