@@ -1,4 +1,4 @@
-# Twitter Clone
+# Social Media Platform
 This is a Twitter-like social media platform built with React, Redux, and Appwrite. The project allows users to sign up, log in, create posts, view others' posts, and interact with them.
 
 ## Features
