@@ -18,14 +18,13 @@ const Login = () => {
         setError("");
 
         try{
-            const session = await authService.login(data);
+            const { email, password } = data
+            console.log(email, password)
+            const user = await authService.login({ email, password });
 
-            if(session){
-                const userData = await authService.getCurrentUser();
+            if(user){
+                dispatch(authLogin(user));
 
-                if(userData){
-                    dispatch(authLogin(userData));
-                }
                 navigate("/");
             }
         }catch(error){

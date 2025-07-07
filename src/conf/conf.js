@@ -6,7 +6,8 @@ const conf = {
     apwwriteUsersCollectioId: String(import.meta.env.VITE_APPWRITE_USERS_COLLECTION_ID),
     appwriteTweetsBucketId: String(import.meta.env.VITE_APPWRITE_TWEETS_BUCKET_ID),
     appwriteProfileBucketId: String(import.meta.env.VITE_APPWRITE_PROFILE_BUCKET_ID), 
-    tinyMceApiKey: String(import.meta.env.VITE_TINY_MCE_API_KEY)
+    tinyMceApiKey: String(import.meta.env.VITE_TINY_MCE_API_KEY),
+    renderUrl: String(import.meta.env.VITE_RENDER_URL)
 };
 
 export default conf;

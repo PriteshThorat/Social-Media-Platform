@@ -154,14 +154,25 @@ export class Service{
     }
 
     async getPosts(){
+        const requestOptions = {
+            method: "GET",
+            credentials: "include",
+            redirect: "follow"
+        };
+
         try {
-            return await this.databases.listDocuments(
-                conf.appwriteDatabaseId,
-                conf.appwriteTweetsCollectionId,
-            );
+            const response = await fetch(`${conf.renderUrl}/home/all-content`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
         } catch (error) {
-            console.log("At getPosts, Error: ", error);
-            return false;
+            alert(error);
+            throw error; 
         }
     }
 

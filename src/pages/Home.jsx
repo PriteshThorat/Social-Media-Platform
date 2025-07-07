@@ -8,7 +8,6 @@ import useTimeAgo from '../hooks/useTimeAgo';
 
 const Home = () => {
     const [tweets, setTweets] = useState([]);
-    const [imgCode, setImgCode] = useState('');
     const [postImgUrls, setPostImgUrls] = useState({});
 
     const navigate = useNavigate();
@@ -16,39 +15,17 @@ const Home = () => {
     const status = useSelector(state => state.auth.status);
     const userData = useSelector(state => state.auth.userData);
 
-    const data = async(email) => {
-        return await service.getUserByEmail(email);
-    }
-
     useEffect(() => {
-        if(!status){
-            navigate('/login');
-        }
+        (async() => {
+            try{
+                const data = await service.getPosts()
 
-        service.getPosts()
-        .then(posts => {
-            if(posts){
-                //Store the Data of all Posts in form of JSON
-                const userTweets = posts.documents
-                .sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt));
-
-                setTweets(userTweets);
+                setTweets(data.data)
+                console.log(data.data)
+            }catch(error){
+                console.log(error)
             }
-        });
-
-        if(userData){
-            (async () => {
-                try {
-                    const user = await data(userData.email);
-
-                    if (user) {
-                        setImgCode(user.profile_code);
-                    }
-                } catch (err) {
-                    console.error("Error fetching user data:", err);
-                }
-            })();
-        }
+        })();
     }, []);
 
     useEffect(() => {
@@ -91,16 +68,16 @@ const Home = () => {
                     {tweets.map(tweet => (
                             <div 
                             className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-full sm:max-w-2xl min-h-[250px]'
-                            key={tweet.$id}>
+                            key={tweet._id}>
                                 <Post 
-                                imgCode={tweet.profile_code} 
-                                userName={tweet.username} 
-                                userId={tweet.user_id} 
-                                createdAt={useTimeAgo(tweet.$updatedAt)} 
-                                context={tweet.content} 
-                                postImgSrc={postImgUrls[tweet.$id] || ""}
-                                likes={tweet.likes}
-                                id={tweet.$id} />
+                                avatar={tweet.owner[0].avatar} 
+                                username={tweet.owner[0].username} 
+                                fullName={tweet.owner[0].fullName} 
+                                createdAt={useTimeAgo(tweet.createdAt)} 
+                                content={tweet.content} 
+                                image={tweet.image || ""}
+                                likesCount={tweet.likesCount}
+                                isLikedByCurrentUser={tweet.isLikedByCurrentUser} />
                             </div>
                     ))}
                     </div>

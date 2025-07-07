@@ -3,37 +3,35 @@ import Button from './Button';
 import InputBox from './InputBox';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
-import { login as authLogin } from '../store/authSlice';
-import authService from '../appwrite/auth';
 import { useDispatch } from 'react-redux';
+import { pass } from '../store/authSlice';
+import auth from '../appwrite/auth'
 
 const SignUp = ({}) => {
     const { register, handleSubmit } = useForm();
-    const [error, setError] = useState("");
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const signup = async(data) => {
-        setError("");
-
         try{
-            const account = await authService.createAccount(data);
+            const { fullName, email, password } = data
+            const username = email.substring(0, email.lastIndexOf('@'))
 
-            console.log(account);
-            if(account){
-                const userData = await authService.getCurrentUser();
+            const user = await auth.createAccount({ username, fullName, email, password })
 
-                console.log(userData);
-                if(userData){
-                    dispatch(authLogin(userData));
-
-                    localStorage.setItem("userData", JSON.stringify(userData));
-                    navigate("/adddp");
-                }
+            const userId = user.data._id
+            
+            dispatch(pass({ userId, email, password }))
+            
+            if(user){
+                navigate("/verify-email")
+            }else{
+                navigate('/login')
             }
+    
+            //navigate("/adddp");
         }catch(error){
-            setError(error.message);
+            console.log(error.message);
         }
     };
 
@@ -67,7 +65,7 @@ const SignUp = ({}) => {
                         type="text"
                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         {
-                            ...register("name", {
+                            ...register("fullName", {
                                 required: true
                             })
                         } />
