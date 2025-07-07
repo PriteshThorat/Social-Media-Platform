@@ -8,12 +8,21 @@ import useTimeAgo from '../hooks/useTimeAgo';
 
 const Home = () => {
     const [tweets, setTweets] = useState([]);
-    const [postImgUrls, setPostImgUrls] = useState({});
 
     const navigate = useNavigate();
 
-    const status = useSelector(state => state.auth.status);
     const userData = useSelector(state => state.auth.userData);
+
+    const submit = async(tweetId) => {
+        try {
+            await service.updateLikes({ tweetId })
+
+            const data = await service.getPosts();
+            setTweets(data.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
         (async() => {
@@ -21,46 +30,19 @@ const Home = () => {
                 const data = await service.getPosts()
 
                 setTweets(data.data)
-                console.log(data.data)
+                console.log(data.data[0]._id)
             }catch(error){
                 console.log(error)
             }
         })();
     }, []);
-
-    useEffect(() => {
-        const fetchPostImages = async () => {
-            const urls = {};
-            for (let tweet of tweets) {
-                if (tweet.media_code) {
-                    urls[tweet.$id] = await getPostImgPreview(tweet.media_code);
-                }
-            }
-            setPostImgUrls(urls);
-        };
-    
-        if (tweets.length > 0) {
-            fetchPostImages();
-        }
-    }, [tweets]);
-
-    const getPostImgPreview = async(code) => {
-        //To get the URL for Posted Image
-        try {
-            const url = await service.getTweetFilePreview(code);
-            return url || "";
-        } catch (err) {
-            console.log("Error fetching post image:", err);
-            return "";
-        }
-    };
     
     return (
         <div 
         className='min-h-screen bg-gray-100 dark:bg-gray-900 px-4'>
             <div 
             className='bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 mx-auto mt-5 w-full max-w-3xl'>
-                <TextEditor/>
+                <TextEditor />
             </div>
             {
                 (tweets.length > 0) ? (
@@ -77,7 +59,8 @@ const Home = () => {
                                 content={tweet.content} 
                                 image={tweet.image || ""}
                                 likesCount={tweet.likesCount}
-                                isLikedByCurrentUser={tweet.isLikedByCurrentUser} />
+                                isLikedByCurrentUser={tweet.isLikedByCurrentUser}
+                                onLikeToggle={() => submit(tweet._id)} />
                             </div>
                     ))}
                     </div>

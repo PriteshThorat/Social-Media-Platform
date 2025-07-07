@@ -1,5 +1,5 @@
 import conf from '../conf/conf'
-import { Client, Account, ID } from "appwrite";
+import { Client, Account } from "appwrite";
 
 export class AuthService {
     client = new Client();
@@ -41,7 +41,7 @@ export class AuthService {
         
             return result; 
         } catch (error) {
-            alert(error);
+            console.log(error);
             throw error; 
         }
     }
@@ -74,7 +74,7 @@ export class AuthService {
         
             return result; 
         } catch (error) {
-            alert(error);
+            console.log(error)
             throw error; 
         }
     }
@@ -106,7 +106,7 @@ export class AuthService {
         
             return result; 
         } catch (error) {
-            alert(error);
+            console.log(error)
             throw error; 
         }
     }

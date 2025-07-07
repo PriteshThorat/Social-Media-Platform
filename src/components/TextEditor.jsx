@@ -6,14 +6,11 @@ import service from '../appwrite/config';
 import { ID } from 'appwrite';
 import { useState } from 'react';
 
-const TextEditor = () => {
-    const [imgUrl, setImgUrl] = useState('');
-    const [imgCode, setImgCode] = useState('');
-    const [testUpload, setTestUpload] = useState(false);
+const TextEditor = ({ postTweet, handleImagePreview }) => {
+    const [previewUrl, setPreviewUrl] = useState('')
 
     const navigate = useNavigate();
     const storedUser = JSON.parse(localStorage.getItem("userData"));
-    const userData = storedUser || useSelector(state => state.auth.userData);
 
     const { register, handleSubmit, setValue, control, getValues, reset } = useForm({
         defaultValues: {
@@ -21,70 +18,33 @@ const TextEditor = () => {
         }
     });
 
-    const submit = async(data) => {
-        const user = await service.getUserByEmail(userData.email);
-
-        console.log(user);
-        if(user){
-            const dbPost = await service.createTweet({
-                slug: ID.unique(),
-                user_id: `@${userData.email.replace(/@(.*)/, "")}`,
-                content: data.content,
-                media_code: imgCode,
-                username: userData.name,
-                profile_code: user.profile_code
-            });
-            console.log(dbPost);
-    
+    /*
             reset({ content: "", image: "" }); 
             setValue("content", "");
-            setImgCode(""); 
-            setImgUrl(""); 
 
-            navigate(0);
-        }
-    };
-
-    const handleImagePreview = async(event) => {
-        setImgCode("");
-
-        const file = event.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                setImgUrl(reader.result);
-            };
-
-            reader.readAsDataURL(file);
-        }
-
-        const fileId = await service.uploadTweetFile(file);
-        setImgCode(fileId.$id);
-    };
+    */
 
     return (
         <form 
-        onSubmit={handleSubmit(submit)}
+        onSubmit={handleSubmit(postTweet)}
         className='bg-white/30 dark:bg-gray-800 dark:bg-opacity-30 backdrop-blur-md shadow-lg rounded-lg p-6 w-full max-w-full sm:max-w-3xl mx-auto mt-8 border border-gray-200 dark:border-gray-700 px-4'>
             <div className='bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 w-full mx-auto'>
                 <TinyMCE 
-                name="content"
-                control={control} 
-                defaultValue={getValues('content')} />
+                    name="content"
+                    control={control} 
+                    defaultValue={getValues('content')} />
                 {
-                    imgUrl && (
+                    previewUrl && (
                         <div className='mt-4'>
-                            <img src={imgUrl} alt="Posted Image" className='rounded-lg w-full'/>
+                            <img src={previewUrl} alt="Posted Image" className='rounded-lg w-full'/>
                         </div>
                     )
                 }
                 <div className='mt-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4'>
                     <div className="w-full">
                         <label 
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Upload Image
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Upload Image
                         </label>
                         <InputBox 
                         placeholder="" 
@@ -97,8 +57,15 @@ const TextEditor = () => {
                             })
                         }
                         onChange={(e) => {
-                            handleImagePreview(e); 
+                            if (e.target.files.length > 0) {
+                                const file = e.target.files[0];
+
+                                setPreviewUrl(URL.createObjectURL(file));
+                            }
+                
                             setValue("image", e.target.files);
+                            
+                            return handleImagePreview(e); 
                         }} />
                     </div>
                     <Button 

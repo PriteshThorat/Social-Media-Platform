@@ -4,11 +4,7 @@ import parse from 'html-react-parser';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 
-const Post = ({avatar, username, fullName, createdAt, content, image, likesCount, isLikedByCurrentUser }) => {
-    const submit = () => {
-        e.preventDefault()
-    }
-
+const Post = ({avatar, username, fullName, createdAt, content, image, likesCount, isLikedByCurrentUser, onLikeToggle }) => {
     return (
         <>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 sm:p-4 w-full max-w-xl mx-auto my-4">
@@ -54,17 +50,14 @@ const Post = ({avatar, username, fullName, createdAt, content, image, likesCount
                         </div>
                     )
                 }
-                <div className="mt-2">
-                    <form
-                    onSubmit={submit} >
-                        {
-                            !isLikedByCurrentUser ? (
-                                <DislikeBtn likes={likesCount}/>
-                            ) : (
-                                <LikeBtn likes={likesCount}/>
-                            )
-                        }
-                    </form>
+                <div className="mt-2" onClick={onLikeToggle}>
+                    {
+                        !isLikedByCurrentUser ? (
+                            <DislikeBtn likes={likesCount}/>
+                        ) : (
+                            <LikeBtn likes={likesCount}/>
+                        )
+                    }
                 </div>
             </div>
         </>

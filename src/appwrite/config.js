@@ -14,8 +14,35 @@ export class Service{
         this.storage = new Storage(this.client);
     }
 
-    async createTweet({slug, user_id, content, media_code, username, profile_code}){
+    async uploadTweet({ content, image }){
+        const formdata = new FormData();
+        formdata.append("content", content);
+
+        if(image)
+            formdata.append("image", image);
+
+        const requestOptions = {
+            method: "POST",
+            body: formdata,
+            credentials: "include",
+            redirect: "follow"
+        };
+
         try {
+            const response = await fetch(`${conf.renderUrl}/tweet/t/upload`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+        /*try {
             return await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteTweetsCollectionId,
@@ -30,7 +57,7 @@ export class Service{
             );
         } catch (error) {
             console.log("At createTweet, Error: ", error);
-        }
+        }*/
     };
 
     async createUsers({slug, username, email, profile_code}){
@@ -65,18 +92,26 @@ export class Service{
         }
     }
 
-    async updateLikes(slug, {likes}){
-        try{
-            return await this.databases.updateDocument(
-                conf.appwriteDatabaseId,
-                conf.appwriteTweetsCollectionId,
-                slug,
-                {
-                    likes
-                }
-            );
-        }catch(error){
-            console.log("At updateLikes, Error: ", error);
+    async updateLikes({ tweetId }){
+        const requestOptions = {
+            method: "GET",
+            credentials: "include",
+            redirect: "follow"
+        };
+
+        try {
+            const response = await fetch(`${conf.renderUrl}/like/tweet/${tweetId}`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
+        } catch (error) {
+            console.log(error);
+            throw error; 
         }
     }
 
@@ -171,7 +206,7 @@ export class Service{
         
             return result; 
         } catch (error) {
-            alert(error);
+            console.log(error);
             throw error; 
         }
     }

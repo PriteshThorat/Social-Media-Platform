@@ -19,7 +19,7 @@ const Login = () => {
 
         try{
             const { email, password } = data
-            console.log(email, password)
+           
             const user = await authService.login({ email, password });
 
             if(user){
