@@ -1,36 +1,52 @@
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Profile as ProfileInfo } from '../components/index';
 import Post from '../components/Post';
-import service from '../appwrite/config';
+import service from '../service/config';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import useTimeAgo from '../hooks/useTimeAgo';
 import { ThemeBtn } from '../components/index';
-import { useSelector } from "react-redux";
+import { TweetProfileSkeleton, UserProfileSkeleton } from '../Skeletons/index'
 
 const Profile = () => {
-    const [tweets, setTweets] = useState(null);
-    const [user, setUser] = useState(null)
-
-    const data = useSelector(state => state.auth.user)
-    setUser(data.data.user)
+    const [tweets, setTweets] = useState([]);
+    const [user, setUser] = useState({})
+    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
     const { username } = useParams();
+
+    const submit = async(tweetId) => {
+        try {
+            await service.updateLikes({ tweetId })
+
+            const data = await service.getPosts();
+            setTweets(data.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
         (async() => {
             try {
                 const data = await service.getUserPosts({ username })
 
-                setTweets(data.data)
+                if(!data.data.length)
+                    navigate('/')
+                else {
+                    setTweets(data.data)
+                    setUser(data.data[0].owner[0])
+                }
             } catch (error) {
                 console.log(error)
+            } finally {
+                setLoading(false)
             }
         })()
-    }, [])
+    }, [username])
 
     return (
         <div className='min-h-screen bg-gray-100 dark:bg-gray-900'>
@@ -45,31 +61,46 @@ const Profile = () => {
             </div>
             <div className='max-w-2xl mx-auto bg-white dark:bg-gray-800 mt-6 shadow-md rounded-lg p-6'>
                 <div>
-                    <ProfileInfo src={user.avatar} alt="Profile Img" name={user.fullName} id={user.username} key={user._id}/>
+                    {
+                        !loading ? (
+                            <ProfileInfo 
+                                avatar={user?.avatar} 
+                                alt="Profile Img" 
+                                fullName={user?.fullName} 
+                                username={user?.username} 
+                                key={user?._id}/>
+                        ) : (
+                            <UserProfileSkeleton />
+                        )
+                    }
                 </div>
                 <div className='max-w-2xl mx-auto mt-6'> 
                     {
-                        tweets.length > 0 ? (
-                            <div className="flex flex-col gap-6 items-center mt-5">
-                                {tweets.map(tweet => (
-                                    <div 
-                                    key={tweet._id} 
-                                    className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-2xl min-h-[250px]'>
-                                        <Post 
-                                        avatar={tweet.owner[0].avatar} 
-                                        username={tweet.owner[0].username} 
-                                        fullName={tweet.owner[0].fullName} 
-                                        createdAt={useTimeAgo(tweet.createdAt)} 
-                                        content={tweet.content} 
-                                        image={tweet.image || ""}
-                                        likesCount={tweet.likesCount}
-                                        isLikedByCurrentUser={tweet.isLikedByCurrentUser}
-                                        onLikeToggle={() => submit(tweet._id)} />
-                                    </div>
-                                ))}
-                            </div>
+                        !loading ? (
+                            tweets.length > 0 ? (
+                                <div className="flex flex-col gap-6 items-center mt-5">
+                                    {tweets.map(tweet => (
+                                        <div 
+                                        key={tweet._id} 
+                                        className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-2xl min-h-[250px]'>
+                                            <Post 
+                                            avatar={tweet.owner[0].avatar} 
+                                            username={tweet.owner[0].username} 
+                                            fullName={tweet.owner[0].fullName} 
+                                            createdAt={useTimeAgo(tweet.createdAt)} 
+                                            content={tweet.content} 
+                                            image={tweet.image || ""}
+                                            likesCount={tweet.likesCount}
+                                            isLikedByCurrentUser={tweet.isLikedByCurrentUser}
+                                            onLikeToggle={() => submit(tweet._id)} />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-center text-gray-500 dark:text-gray-400">No posts available</p>
+                            )
                         ) : (
-                            <p className="text-center text-gray-500 dark:text-gray-400">No posts available</p>
+                            <TweetProfileSkeleton />
                         )
                     }
                 </div>

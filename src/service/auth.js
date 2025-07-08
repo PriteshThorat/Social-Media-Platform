@@ -1,16 +1,5 @@
 import conf from '../conf/conf'
-import { Client, Account } from "appwrite";
-
 export class AuthService {
-    client = new Client();
-    account;
-
-    constructor(){
-        this.client
-            .setEndpoint(conf.appwriteUrl)
-            .setProject(conf.appwriteProjectId);
-        this.account = new Account(this.client);
-    }
 
     async createAccount({ username, fullName, email, password }) {
         const myHeaders = new Headers();
@@ -112,13 +101,26 @@ export class AuthService {
     }
 
     async getCurrentUser(){
-        try {
-            return await this.account.get();
-        } catch (error) {
-            console.log("At getCurrentUser, Error: ", error);
-        }
+        const requestOptions = {
+            method: "GET",
+            credentials: "include",
+            redirect: "follow"
+        };
 
-        return null;
+        try {
+            const response = await fetch(`${conf.renderUrl}/users/me/`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
     }
 
     async logout(){

@@ -1,7 +1,5 @@
 import { DislikeBtn, LikeBtn, ProfilePicture } from './index';
-import service from '../appwrite/config';
 import parse from 'html-react-parser';
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 
 const Post = ({avatar, username, fullName, createdAt, content, image, likesCount, isLikedByCurrentUser, onLikeToggle }) => {

@@ -37,5 +37,5 @@ export {
     Logout,
     DislikeBtn,
     ThemeBtn,
-    VerifyOTP
+    VerifyOTP,
 };

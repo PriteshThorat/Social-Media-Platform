@@ -1,6 +1,6 @@
 import { Button, TinyMCE, InputBox } from './index';
 import { useForm } from 'react-hook-form';
-import service from '../appwrite/config';
+import service from '../service/config';
 import { useState } from 'react';
 
 const TextEditor = ({ onUpdate }) => {
@@ -52,10 +52,13 @@ const TextEditor = ({ onUpdate }) => {
                 <div className='mt-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4'>
                     <div className="w-full">
                         <label 
+                            htmlFor='upload-image'
                             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Upload Image
                         </label>
                         <InputBox 
+                        id="upload-image"
+                        autocomplete="upload-image"
                         placeholder="" 
                         type="file" 
                         className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"

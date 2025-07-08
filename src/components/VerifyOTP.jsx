@@ -1,6 +1,6 @@
 import { InputBox } from './index'
 import { useForm } from 'react-hook-form';
-import authService from '../appwrite/auth'
+import authService from '../service/auth'
 import { useDispatch, useSelector } from 'react-redux';
 import { pass, login } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';

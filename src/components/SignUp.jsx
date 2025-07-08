@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { pass } from '../store/authSlice';
-import auth from '../appwrite/auth'
+import auth from '../service/auth'
 
 const SignUp = ({}) => {
     const { register, handleSubmit } = useForm();
@@ -56,9 +56,12 @@ const SignUp = ({}) => {
                 onSubmit={handleSubmit(signup)}>
                     <div className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
                         <Label 
+                        labelFor="name"
                         text="Enter Name"
                         fontSize="20px" />
                         <InputBox
+                        id="name"
+                        autocomplete="name"
                         placeholder="Enter your Name"
                         height='20px'
                         width='20px'
@@ -70,9 +73,12 @@ const SignUp = ({}) => {
                             })
                         } />
                         <Label 
+                        labelFor="email"
                         text="Email"
                         fontSize="20px" />
                         <InputBox
+                        id="email"
+                        autocomplete="email" 
                         placeholder="Enter your Email"
                         height='20px'
                         width='20px'
@@ -91,9 +97,12 @@ const SignUp = ({}) => {
                             })
                         } />
                         <Label 
+                        labelFor="password"
                         text="Password"
                         fontSize="20px" />
                         <InputBox
+                        id="password"
+                        autocomplete="new-password" 
                         placeholder="Enter your Password"
                         height='20px'
                         width='20px'

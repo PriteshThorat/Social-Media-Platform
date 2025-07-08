@@ -4,7 +4,7 @@ import InputBox from './InputBox';
 import { login as authLogin } from '../store/authSlice';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import authService from '../appwrite/auth';
+import authService from '../service/auth';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -53,9 +53,12 @@ const Login = () => {
                 className='w-full max-w-sm' >
                     <div className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
                         <Label 
+                        labelFor="email"
                         text="Email"
                         fontSize="20px" />
                         <InputBox
+                        id="email"
+                        autocomplete="email"
                         placeholder="Enter your Email"
                         height='20px'
                         width='20px'
@@ -74,9 +77,12 @@ const Login = () => {
                             })
                         } />
                         <Label 
+                        labelFor="password"
                         text="Password"
                         fontSize="20px" />
                         <InputBox
+                        id="password"
+                        autocomplete="current-password"
                         placeholder="Enter your Password"
                         height='20px'
                         width='20px'

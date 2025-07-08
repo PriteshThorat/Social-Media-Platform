@@ -1,7 +1,7 @@
 import { ProfilePicture, Button } from './index';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import auth from '../appwrite/auth'
+import auth from '../service/auth'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { pass } from '../store/authSlice';
