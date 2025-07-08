@@ -13,7 +13,6 @@ import TextEditor from "./TextEditor";
 import Logo from "./Logo";
 import Header from './Header';
 import TinyMCE from './TinyMCE'
-import Logout from './Logout';
 import DislikeBtn from './DislikeBtn';
 import ThemeBtn from "./ThemeBtn";
 import VerifyOTP from "./VerifyOTP";
@@ -34,7 +33,6 @@ export {
     Logo,
     Header,
     TinyMCE,
-    Logout,
     DislikeBtn,
     ThemeBtn,
     VerifyOTP,

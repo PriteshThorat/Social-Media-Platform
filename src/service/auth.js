@@ -145,6 +145,97 @@ export class AuthService {
             throw error; 
         }
     }
+
+    async updateAvatar({ avatar }){
+        const formdata = new FormData();
+        formdata.append("avatar", avatar)
+
+        const requestOptions = {
+            method: "PATCH",
+            body: formdata,
+            redirect: "follow",
+            credentials: "include"
+        };
+
+        try {
+            const response = await fetch(`${conf.renderUrl}/users/u/avatar`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    }
+
+    async requestOTP({ email }){
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "email": email
+        });
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        try {
+            const response = await fetch(`${conf.renderUrl}/users/r/otp`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    }
+
+    async changePassword({ email, userOTP, newPassword }){
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "email": email,
+            "userOTP": userOTP,
+            "newPassword": newPassword
+        });
+
+        const requestOptions = {
+            method: "PATCH",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
+
+        try {
+            const response = await fetch(`${conf.renderUrl}/users/c/password`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    }
 };
 
 const authService = new AuthService;

@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { Provider } from 'react-redux';
-import { Login, Profile, SignUp, Home, VerifyOTP } from './pages/index';
+import { Login, Profile, SignUp, Home, VerifyOTP, ForgotPassword } from './pages/index';
 import App from './App.jsx'
 import store from './store/store';
 import { AuthLayout, AddProfileImg } from './components/index';
@@ -14,12 +14,13 @@ const router = createBrowserRouter(
       {/* Unprotected Routes */}
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<SignUp />} />
+      <Route path="forgot-password" element={<ForgotPassword />} />
       <Route path="verify-email" element={<VerifyOTP />} />
 
       {/* Protected Routes */}
       <Route element={<AuthLayout authentication={true} />}>
         <Route index element={<Home />} />
-        <Route path="adddp" element={<AddProfileImg />} />
+        <Route path="change-avatar" element={<AddProfileImg />} />
         <Route path="profile/:username" element={<Profile />} />
       </Route>
     </Route>

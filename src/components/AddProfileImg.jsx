@@ -4,41 +4,41 @@ import { useForm } from 'react-hook-form';
 import auth from '../service/auth'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { pass } from '../store/authSlice';
+import { login as authLogin } from '../store/authSlice';
 
 const AddProfileImg = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const [file, setFile] = useState(null)
     const [previewUrl, setPreviewUrl] = useState('');
-
-    //const { fullName, email, password } = JSON.parse(localStorage.getItem("userData"));
+     
+    const user = useSelector(state => state?.auth?.user);
+    const fullName = user?.data?.fullName
+    const avatar = user?.data?.avatar
 
     const { register } = useForm();
 
-    const add = async(e) => {
-        /*e.preventDefault();
+    const submit = async(e) => {
+        e.preventDefault();
 
         try {
-            //localStorage.removeItem("userData");
-            //localStorage.setItem("user", JSON.stringify(user));
+            const userData = await auth.updateAvatar({ avatar: file })
 
-            if(user){
-                dispatch(pass(user))
+            if(userData){
+                dispatch(authLogin(userData))
 
-                navigate("/verify-email")
-            }else{
-                navigate('/login')
+                navigate("/")
             }
         } catch (error) {
             console.log(error);
-        }*/
+        }
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4">
             <form 
-            onSubmit={add} 
+            onSubmit={submit} 
             className="w-full max-w-sm">
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Add Profile Picture</h2>
@@ -58,7 +58,7 @@ const AddProfileImg = () => {
                                 className="w-24 h-24 border-4 border-blue-500 shadow-lg"/>
                             ) : (
                                 <ProfilePicture 
-                                src="https://res.cloudinary.com/di6xejgh8/image/upload/v1751550462/icon-7797704_640_m2xuqb.png"
+                                src={avatar}
                                 alt="Add DP" 
                                 className="w-24 h-24 border-4 border-blue-500 shadow-lg"/>
                             )
@@ -84,7 +84,7 @@ const AddProfileImg = () => {
                 </div>
                 <div className='mt-6'>
                     <Button 
-                    text="Verify Email" 
+                    text="Update Profile Picture" 
                     type="submit" className='w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition duration-300 shadow-md'/>
                 </div>
             </form>

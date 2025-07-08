@@ -6,13 +6,18 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { pass } from '../store/authSlice';
 import auth from '../service/auth'
+import { useState } from 'react';
 
 const SignUp = ({}) => {
     const { register, handleSubmit } = useForm();
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
+    const [error, setError] = useState('')
+
     const signup = async(data) => {
+        setError('')
+        
         try{
             const { fullName, email, password } = data
             const username = email.substring(0, email.lastIndexOf('@'))
@@ -28,10 +33,8 @@ const SignUp = ({}) => {
             }else{
                 navigate('/login')
             }
-    
-            //navigate("/adddp");
         }catch(error){
-            console.log(error.message);
+            setError(error.message);
         }
     };
 
@@ -113,6 +116,7 @@ const SignUp = ({}) => {
                                 required: true
                             })
                         } />
+                        {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
                         <Button
                         type="submit"
                         text="Sign up"
