@@ -2,21 +2,24 @@ import { TextEditor } from '../components/index';
 import Post from '../components/Post';
 import service from '../appwrite/config';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import useTimeAgo from '../hooks/useTimeAgo';
 
 const Home = () => {
     const [tweets, setTweets] = useState([]);
 
-    const navigate = useNavigate();
-
-    const userData = useSelector(state => state.auth.userData);
-
     const submit = async(tweetId) => {
         try {
             await service.updateLikes({ tweetId })
 
+            const data = await service.getPosts();
+            setTweets(data.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const update = async() => {
+        try {
             const data = await service.getPosts();
             setTweets(data.data);
         } catch (error) {
@@ -30,7 +33,6 @@ const Home = () => {
                 const data = await service.getPosts()
 
                 setTweets(data.data)
-                console.log(data.data[0]._id)
             }catch(error){
                 console.log(error)
             }
@@ -42,7 +44,7 @@ const Home = () => {
         className='min-h-screen bg-gray-100 dark:bg-gray-900 px-4'>
             <div 
             className='bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 mx-auto mt-5 w-full max-w-3xl'>
-                <TextEditor />
+                <TextEditor onUpdate={update}/>
             </div>
             {
                 (tweets.length > 0) ? (

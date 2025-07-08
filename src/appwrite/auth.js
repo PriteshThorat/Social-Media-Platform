@@ -122,10 +122,25 @@ export class AuthService {
     }
 
     async logout(){
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow",
+            credentials: "include"
+        };
+
         try {
-            return await this.account.deleteSessions();
+            const response = await fetch(`${conf.renderUrl}/users/logout`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
         } catch (error) {
-            console.log("At logout, Error: ", error);
+            console.log(error);
+            throw error; 
         }
     }
 };

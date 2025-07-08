@@ -1,16 +1,11 @@
-import { useNavigate } from 'react-router-dom';
 import { Button, TinyMCE, InputBox } from './index';
-import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import service from '../appwrite/config';
-import { ID } from 'appwrite';
 import { useState } from 'react';
 
-const TextEditor = ({ postTweet, handleImagePreview }) => {
+const TextEditor = ({ onUpdate }) => {
     const [previewUrl, setPreviewUrl] = useState('')
-
-    const navigate = useNavigate();
-    const storedUser = JSON.parse(localStorage.getItem("userData"));
+    const [file, setFile] = useState(null)
 
     const { register, handleSubmit, setValue, control, getValues, reset } = useForm({
         defaultValues: {
@@ -18,11 +13,25 @@ const TextEditor = ({ postTweet, handleImagePreview }) => {
         }
     });
 
-    /*
+    const postTweet = async(data) => {
+        try {
+            const { content } = data
+
+            await service.uploadTweet({ content, image: file })
+
             reset({ content: "", image: "" }); 
             setValue("content", "");
+            setValue("image", "")
 
-    */
+            setPreviewUrl("");
+            setFile(null);
+
+
+            onUpdate()
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <form 
@@ -61,11 +70,10 @@ const TextEditor = ({ postTweet, handleImagePreview }) => {
                                 const file = e.target.files[0];
 
                                 setPreviewUrl(URL.createObjectURL(file));
+                                setFile(file)
                             }
                 
                             setValue("image", e.target.files);
-                            
-                            return handleImagePreview(e); 
                         }} />
                     </div>
                     <Button 

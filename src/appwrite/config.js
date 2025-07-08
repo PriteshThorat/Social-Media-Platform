@@ -42,22 +42,6 @@ export class Service{
             console.log(error);
             throw error; 
         }
-        /*try {
-            return await this.databases.createDocument(
-                conf.appwriteDatabaseId,
-                conf.appwriteTweetsCollectionId,
-                slug,
-                {
-                    user_id,
-                    content,
-                    media_code,
-                    username,
-                    profile_code
-                }
-            );
-        } catch (error) {
-            console.log("At createTweet, Error: ", error);
-        }*/
     };
 
     async createUsers({slug, username, email, profile_code}){
@@ -197,6 +181,29 @@ export class Service{
 
         try {
             const response = await fetch(`${conf.renderUrl}/home/all-content`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    }
+
+    async getUserPosts({ username }){
+        const requestOptions = {
+            method: "GET",
+            credentials: "include",
+            redirect: "follow"
+        };
+
+        try {
+            const response = await fetch(`${conf.renderUrl}/home/user-content/${username}`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");

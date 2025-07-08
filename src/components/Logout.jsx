@@ -8,16 +8,17 @@ const Logout = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const logoutSession = (e) => {
-        e.preventDefault();
+    const logoutSession = async(e) => {
+        e.preventDefault()
+        
+        try {
+            await authService.logout()
 
-        authService.logout().then(() => {
-            dispatch(logout());
-            navigate('/login');
-        });
-
-        localStorage.removeItem("fileCode"); 
-        localStorage.removeItem("userData"); 
+            dispatch(logout())
+            navigate('/login')
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     return (
