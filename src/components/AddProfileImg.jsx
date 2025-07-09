@@ -13,7 +13,7 @@ const AddProfileImg = () => {
     const [file, setFile] = useState(null)
     const [previewUrl, setPreviewUrl] = useState('');
      
-    const user = useSelector(state => state?.auth?.user);
+    const user = useSelector(state => state.auth.user);
     const fullName = user?.data?.fullName
     const avatar = user?.data?.avatar
 

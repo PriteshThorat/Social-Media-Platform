@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 const SignUp = ({}) => {
     const { register, handleSubmit } = useForm();
+
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
@@ -24,7 +25,7 @@ const SignUp = ({}) => {
 
             const user = await auth.createAccount({ username, fullName, email, password })
 
-            const userId = user.data._id
+            const userId = user?.data?._id
             
             dispatch(pass({ userId, email, password }))
             

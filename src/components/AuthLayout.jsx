@@ -11,7 +11,7 @@ const AuthLayout = ({ authentication = true }) => {
 
     const [isLoading, setIsLoading] = useState(true);
 
-    const authStatus = useSelector(state => state.auth.status);
+    const authStatus = useSelector(state => state?.auth?.status);
 
     useEffect(() => {
         (async() => {
@@ -21,7 +21,20 @@ const AuthLayout = ({ authentication = true }) => {
                 if(user)
                     dispatch(login(user));
             } catch (error) {
-                console.log(error)
+                if (error.response?.status === 401){
+                    try {
+                        await auth.refreshAccessToken()
+
+                        const user = await auth.getCurrentUser(); 
+
+                        if (user) 
+                            dispatch(login(user));
+                    } catch (refreshError) {
+                        console.log("Refresh failed, please login again.");
+                    }
+                } else {
+                    console.log(error)
+                }
             }
         })()
     }, [])
@@ -29,8 +42,6 @@ const AuthLayout = ({ authentication = true }) => {
     useEffect(() => {
         if (authentication && !authStatus) {
             navigate('/login', { replace: true });
-        } else if (!authentication && authStatus) {
-            navigate('/adddp', { replace: true });
         } else {
             setIsLoading(false);
         }

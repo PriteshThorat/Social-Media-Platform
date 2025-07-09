@@ -55,11 +55,11 @@ export class AuthService {
         try {
             const response = await fetch(`${conf.renderUrl}/users/login`, requestOptions);
             if (!response.ok) {
-                const errData = await response.json();
+                const errData = await response?.json();
                 throw new Error(errData.message || "Unknown error");
             }
 
-            const result = await response.json();
+            const result = await response?.json();
         
             return result; 
         } catch (error) {
@@ -223,6 +223,28 @@ export class AuthService {
 
         try {
             const response = await fetch(`${conf.renderUrl}/users/c/password`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Unknown error");
+            }
+
+            const result = await response.json();
+        
+            return result; 
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    }
+
+    async refreshAccessToken(){
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow"
+        };
+
+        try {
+            const response = await fetch(`${conf.renderUrl}/users/new-access-token`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");

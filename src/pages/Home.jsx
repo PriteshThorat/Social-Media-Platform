@@ -14,7 +14,7 @@ const Home = () => {
             await service.updateLikes({ tweetId })
 
             const data = await service.getPosts();
-            setTweets(data.data);
+            setTweets(data?.data);
         } catch (error) {
             console.log(error)
         }
@@ -23,7 +23,7 @@ const Home = () => {
     const update = async() => {
         try {
             const data = await service.getPosts();
-            setTweets(data.data);
+            setTweets(data?.data);
         } catch (error) {
             console.log(error)
         }
@@ -34,7 +34,7 @@ const Home = () => {
             try {
                 const data = await service.getPosts()
 
-                setTweets(data.data)
+                setTweets(data?.data)
             } catch(error) {
                 console.log(error)
             } finally {

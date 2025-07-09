@@ -49,11 +49,6 @@ const Header = () => {
                 {
                     open && (
                         <div className="absolute right-4 top-14 w-52 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden animate-fade-in">
-                            <p
-                                onClick={logoutSession}
-                                className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" >
-                                Logout
-                            </p>
                             {
                                 location.pathname !== '/change-avatar' && (
                                     <p
@@ -66,6 +61,11 @@ const Header = () => {
                                     </p>
                                 )
                             }
+                            <p
+                                onClick={logoutSession}
+                                className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" >
+                                Logout
+                            </p>
                         </div>
                     )
                 }
