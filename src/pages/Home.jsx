@@ -45,19 +45,16 @@ const Home = () => {
     
     return (
         <div 
-        className='min-h-screen bg-gray-100 dark:bg-gray-900 px-4'>
-            <div 
-            className='bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 mx-auto mt-5 w-full max-w-3xl'>
-                <TextEditor onUpdate={update}/>
-            </div>
+        className='min-h-screen bg-gray-100 dark:bg-[#1A1C22] px-4'>
+            <div className='mx-auto w-full max-w-3xl'>
+                <div className='bg-white dark:bg-[#3D3A50] shadow-md rounded-lg p-5 mt-5'>
+                    <TextEditor onUpdate={update}/>
+                </div>
             {
                 !loading ? (
                     (tweets.length > 0) ? (
-                        <div className="flex flex-col gap-6 items-center mt-5">
+                        <div className="flex flex-col gap-2 p-5 mt-5">
                         {tweets.map(tweet => (
-                                <div 
-                                className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 w-full max-w-full sm:max-w-2xl min-h-[250px]'
-                                key={tweet._id}>
                                     <Post 
                                     avatar={tweet.owner[0].avatar} 
                                     username={tweet.owner[0].username} 
@@ -67,13 +64,13 @@ const Home = () => {
                                     image={tweet.image || ""}
                                     likesCount={tweet.likesCount}
                                     isLikedByCurrentUser={tweet.isLikedByCurrentUser}
-                                    onLikeToggle={() => submit(tweet._id)} />
-                                </div>
+                                    onLikeToggle={() => submit(tweet._id)}
+                                    key={tweet._id} />
                         ))}
                         </div>
                     ) : (
                         <p 
-                        className='text-gray-500 dark:text-gray-400 text-center mt-10'>
+                        className='text-gray-500 dark:text-[#3A4F50] text-center mt-10'>
                             No posts available
                         </p>
                     )
@@ -81,6 +78,7 @@ const Home = () => {
                         <HomeSkeleton />
                     )
             }
+                </div>
             </div>
     );
 };

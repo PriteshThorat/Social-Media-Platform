@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import authService from '../service/auth';
 import { useForm } from 'react-hook-form';
+import { pass } from '../store/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -19,9 +20,8 @@ const Login = () => {
     const login = async(data) => {
         setError("");
 
+        const { email, password } = data
         try{
-            const { email, password } = data
-           
             const user = await authService.login({ email, password });
 
             if(user){
@@ -30,7 +30,13 @@ const Login = () => {
                 navigate("/");
             }
         }catch(error){
-            setError(error.message);
+            if(`${error.toString()}` === "Error: VERIFY_EMAIL"){
+                dispatch(pass({ email, password }))
+
+                navigate('/verify-email')
+            }
+
+            setError(error);
         }
     }
 
@@ -102,7 +108,7 @@ const Login = () => {
                                 Forgot Password?
                             </Link>
                         </div>
-                        {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+                        {error && <p className="text-red-500 mt-2 text-sm">{error.toString()}</p>}
                         <Button
                         text="Log in"
                         height="20px"

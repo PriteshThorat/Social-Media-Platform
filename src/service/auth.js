@@ -56,6 +56,10 @@ export class AuthService {
             const response = await fetch(`${conf.renderUrl}/users/login`, requestOptions);
             if (!response.ok) {
                 const errData = await response?.json();
+
+                if(errData.action === "VERIFY_EMAIL")
+                    throw new Error(errData.action || "");
+    
                 throw new Error(errData.message || "Unknown error");
             }
 
@@ -68,12 +72,12 @@ export class AuthService {
         }
     }
 
-    async verifyOTP({ userID, userOTP }){
+    async verifyOTP({ email, userOTP }){
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
         const raw = JSON.stringify({
-            "userId": userID,
+            "email": email,
             "userOTP": userOTP
         });
 
@@ -111,7 +115,7 @@ export class AuthService {
             const response = await fetch(`${conf.renderUrl}/users/me/`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
-                throw new Error(errData.message || "Unknown error");
+                throw new Error(errData.action || "Unknown error");
             }
 
             const result = await response.json();
@@ -240,7 +244,8 @@ export class AuthService {
     async refreshAccessToken(){
         const requestOptions = {
             method: "GET",
-            redirect: "follow"
+            redirect: "follow",
+            credentials: "include"
         };
 
         try {

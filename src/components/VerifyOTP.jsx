@@ -18,9 +18,7 @@ const VerifyOTP = () => {
 
         const userOTP = `${part1}${part2}${part3}${part4}${part5}${part6}`
 
-        const userID = user.userId
-
-        const isCorrectOTP = await authService.verifyOTP({ userID, userOTP })
+        const isCorrectOTP = await authService.verifyOTP({ email: user.email, userOTP })
 
         if(isCorrectOTP){
           const userPassword = user.password

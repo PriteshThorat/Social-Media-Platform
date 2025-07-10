@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const Post = ({avatar, username, fullName, createdAt, content, image, likesCount, isLikedByCurrentUser, onLikeToggle }) => {
     return (
         <>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-3 sm:p-4 w-full max-w-xl mx-auto my-4">
+            <div className="bg-white dark:bg-[#3D3A50] rounded-lg shadow-md p-5 w-full">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <Link to={`/profile/${username}`} >
                         <ProfilePicture 
@@ -40,11 +40,13 @@ const Post = ({avatar, username, fullName, createdAt, content, image, likesCount
                 </div>
                 {
                     image && (
-                        <div className="mt-3 flex justify-center">
-                            <img 
-                            className="w-full max-h-96 object-cover rounded-md"
-                            src={image} 
-                            alt=""/>
+                        <div className="w-full max-w-sm mx-auto">
+                            <div className="aspect-square w-full rounded-md overflow-hidden">
+                                <img 
+                                className="w-full h-full object-cover"
+                                src={image} 
+                                alt=""/>
+                            </div>
                         </div>
                     )
                 }

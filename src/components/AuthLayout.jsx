@@ -21,19 +21,15 @@ const AuthLayout = ({ authentication = true }) => {
                 if(user)
                     dispatch(login(user));
             } catch (error) {
-                if (error.response?.status === 401){
-                    try {
-                        await auth.refreshAccessToken()
+                try {
+                    await auth.refreshAccessToken()
 
-                        const user = await auth.getCurrentUser(); 
+                    const user = await auth.getCurrentUser(); 
 
-                        if (user) 
-                            dispatch(login(user));
-                    } catch (refreshError) {
-                        console.log("Refresh failed, please login again.");
-                    }
-                } else {
-                    console.log(error)
+                    if (user) 
+                        dispatch(login(user));
+                } catch (refreshError) {
+                    console.log("Refresh failed, please login again.");
                 }
             }
         })()

@@ -6,6 +6,7 @@ import { useState } from 'react';
 const TextEditor = ({ onUpdate }) => {
     const [previewUrl, setPreviewUrl] = useState('')
     const [file, setFile] = useState(null)
+    const [error, setError] = useState('')
 
     const { register, handleSubmit, setValue, control, getValues, reset } = useForm({
         defaultValues: {
@@ -14,6 +15,8 @@ const TextEditor = ({ onUpdate }) => {
     });
 
     const postTweet = async(data) => {
+        setError('')
+
         try {
             const { content } = data
 
@@ -24,20 +27,20 @@ const TextEditor = ({ onUpdate }) => {
             setValue("image", "")
 
             setPreviewUrl("");
+            setError('')
             setFile(null);
 
 
             onUpdate()
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            setError(err || 'An error occurred')
+            console.log(err)
         }
     }
 
     return (
         <form 
-        onSubmit={handleSubmit(postTweet)}
-        className='bg-white/30 dark:bg-gray-800 dark:bg-opacity-30 backdrop-blur-md shadow-lg rounded-lg p-6 w-full max-w-full sm:max-w-3xl mx-auto mt-8 border border-gray-200 dark:border-gray-700 px-4'>
-            <div className='bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 w-full mx-auto'>
+        onSubmit={handleSubmit(postTweet)} >
                 <TinyMCE 
                     name="content"
                     control={control} 
@@ -49,6 +52,7 @@ const TextEditor = ({ onUpdate }) => {
                         </div>
                     )
                 }
+                {error && <p className="text-red-500 mt-2 text-sm">{error.toString()}</p>}
                 <div className='mt-4 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4'>
                     <div className="w-full">
                         <label 
@@ -61,7 +65,7 @@ const TextEditor = ({ onUpdate }) => {
                         autocomplete="upload-image"
                         placeholder="" 
                         type="file" 
-                        className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+                        className="w-full bg-gradient-to-r bg-[#FD7014] dark:bg-[#580EF6] px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
                         accept="image/png, image/jpg, image/jpeg, image/gif"
                         {
                             ...register("image", {
@@ -81,9 +85,8 @@ const TextEditor = ({ onUpdate }) => {
                     </div>
                     <Button 
                     text="Post" 
-                    className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105" type="submit"/>
+                    className="w-full sm:w-auto bg-gradient-to-r bg-[#FD7014] dark:bg-[#580EF6] px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105" type="submit"/>
                 </div>
-            </div>
         </form>
     );
 };

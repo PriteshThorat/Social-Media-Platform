@@ -16,7 +16,7 @@ const Header = () => {
 
     const status = useSelector(state => state.auth.status);
 
-     const logoutSession = async(e) => {
+    const logoutSession = async(e) => {
         e.preventDefault()
         
         try {
@@ -32,7 +32,7 @@ const Header = () => {
     };
 
     return (
-        <div className='flex items-center justify-between px-4 sm:px-6 py-3 bg-gradient-to-r from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 border-b border-gray-200 dark:border-gray-800 transition-all duration-300 relative'>
+        <div className='flex items-center justify-between px-4 sm:px-6 py-3 bg-gradient-to-r bg-white dark:bg-[#1A1C22] transition-all duration-300 relative'>
             <Logo/>
             <div className='flex items-center space-x-4'>
                 <ThemeBtn />
@@ -48,7 +48,7 @@ const Header = () => {
                 }
                 {
                     open && (
-                        <div className="absolute right-4 top-14 w-52 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden animate-fade-in">
+                        <div className="absolute right-4 top-14 w-52 border border-gray-200 dark:border-gray-700 bg-[#FD7014] dark:bg-[#580EF6] rounded-lg shadow-xl z-50 overflow-hidden animate-fade-in">
                             {
                                 location.pathname !== '/change-avatar' && (
                                     <p
