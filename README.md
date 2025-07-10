@@ -69,13 +69,13 @@ A modern, full-featured social media platform built with React, Redux, and a cus
 | **Environment**    | dotenv                 |
 | **Utilities**      | UUID                   |
 
-## �️ Database Schema
+## 🗄️ Database Schema
 
 ![Database Schema](./public/database-schema.svg)
 
 _Complete database model showing relationships between Users, Posts, Comments, Likes, and other entities_
 
-## �📁 Project Structure
+## 📁 Project Structure
 
 ```
 src/
