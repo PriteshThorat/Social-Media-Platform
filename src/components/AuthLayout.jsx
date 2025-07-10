@@ -1,27 +1,57 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import auth from '../service/auth'
+import { useDispatch } from 'react-redux';
+import { login } from '../store/authSlice';
 
-const AuthLayout = ({children, authentication=true}) => {
-    const navigate = useNavigate();
-    const [loader, setLoader] = useState(true);
-    const authStatus = useSelector(state => state.auth.status);
+const AuthLayout = ({ authentication = true }) => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    const authStatus = useSelector(state => state?.auth?.status);
 
     useEffect(() => {
-        if(authentication && authStatus !== authentication){
-            navigate("/login");
-        }else if(!authentication && authStatus !== authentication){
-            navigate("/adddp");
-        }
+        (async() => {
+            try {
+                const user = await auth.getCurrentUser()
 
-        setLoader(false);
+                if(user)
+                    dispatch(login(user));
+            } catch (error) {
+                try {
+                    await auth.refreshAccessToken()
+
+                    const user = await auth.getCurrentUser(); 
+
+                    if (user) 
+                        dispatch(login(user));
+                } catch (refreshError) {
+                    console.log("Refresh failed, please login again.");
+                }
+            }
+        })()
+    }, [])
+
+    useEffect(() => {
+        if (authentication && !authStatus) {
+            navigate('/login', { replace: true });
+        } else {
+            setIsLoading(false);
+        }
     }, [authStatus, navigate, authentication]);
 
-    return loader ? (
-        <h1>Loading...</h1>
-    ) : (
-        <>{children}</>
-    );
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <h1 className="text-xl font-semibold">Loading...</h1>
+            </div>
+        );
+    }
+
+    return <Outlet />;
 };
 
 export default AuthLayout;

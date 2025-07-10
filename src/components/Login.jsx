@@ -4,32 +4,39 @@ import InputBox from './InputBox';
 import { login as authLogin } from '../store/authSlice';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import authService from '../appwrite/auth';
+import authService from '../service/auth';
 import { useForm } from 'react-hook-form';
+import { pass } from '../store/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const { register, handleSubmit } = useForm();
+    
     const [error, setError] = useState("");
 
     const login = async(data) => {
         setError("");
 
+        const { email, password } = data
         try{
-            const session = await authService.login(data);
+            const user = await authService.login({ email, password });
 
-            if(session){
-                const userData = await authService.getCurrentUser();
+            if(user){
+                dispatch(authLogin(user));
 
-                if(userData){
-                    dispatch(authLogin(userData));
-                }
                 navigate("/");
             }
         }catch(error){
-            setError(error.message);
+            if(`${error.toString()}` === "Error: VERIFY_EMAIL"){
+                dispatch(pass({ email, password }))
+
+                navigate('/verify-email')
+            }
+
+            setError(error);
         }
     }
 
@@ -54,9 +61,12 @@ const Login = () => {
                 className='w-full max-w-sm' >
                     <div className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
                         <Label 
+                        labelFor="email"
                         text="Email"
                         fontSize="20px" />
                         <InputBox
+                        id="email"
+                        autocomplete="email"
                         placeholder="Enter your Email"
                         height='20px'
                         width='20px'
@@ -75,9 +85,12 @@ const Login = () => {
                             })
                         } />
                         <Label 
+                        labelFor="password"
                         text="Password"
                         fontSize="20px" />
                         <InputBox
+                        id="password"
+                        autocomplete="current-password"
                         placeholder="Enter your Password"
                         height='20px'
                         width='20px'
@@ -88,6 +101,14 @@ const Login = () => {
                                 required: true
                             })
                         } />
+                         <div className="text-right mt-2 mb-4">
+                            <Link
+                                to="/forgot-password"
+                                className="text-sm text-blue-500 dark:text-blue-400 hover:underline" >
+                                Forgot Password?
+                            </Link>
+                        </div>
+                        {error && <p className="text-red-500 mt-2 text-sm">{error.toString()}</p>}
                         <Button
                         text="Log in"
                         height="20px"

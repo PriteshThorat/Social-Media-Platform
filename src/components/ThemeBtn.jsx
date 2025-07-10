@@ -18,12 +18,12 @@ const ThemeBtn = () => {
     return (
         <button 
             onClick={toggleTheme} 
-            className="p-2 rounded-full transition-all duration-300 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200">
+            className="p-2 rounded-full transition hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 text-gray-700 dark:text-gray-200">
             {
             themeMode === "dark" ? (
-                <MdOutlineDarkMode size={24} />
+                <MdOutlineDarkMode size={22} />
             ) : (
-                <MdDarkMode size={24} />
+                <MdDarkMode size={22} />
             )}
         </button>
     );

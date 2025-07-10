@@ -3,34 +3,36 @@ import Button from './Button';
 import InputBox from './InputBox';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
-import { login as authLogin } from '../store/authSlice';
-import authService from '../appwrite/auth';
 import { useDispatch } from 'react-redux';
+import { pass } from '../store/authSlice';
+import auth from '../service/auth'
+import { useState } from 'react';
 
 const SignUp = ({}) => {
     const { register, handleSubmit } = useForm();
-    const [error, setError] = useState("");
-    const dispatch = useDispatch();
+
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+
+    const [error, setError] = useState('')
 
     const signup = async(data) => {
-        setError("");
-
+        setError('')
+        
         try{
-            const account = await authService.createAccount(data);
+            const { fullName, email, password } = data
+            const username = email.substring(0, email.lastIndexOf('@'))
 
-            console.log(account);
-            if(account){
-                const userData = await authService.getCurrentUser();
+            const user = await auth.createAccount({ username, fullName, email, password })
 
-                console.log(userData);
-                if(userData){
-                    dispatch(authLogin(userData));
-
-                    localStorage.setItem("userData", JSON.stringify(userData));
-                    navigate("/adddp");
-                }
+            const userId = user?.data?._id
+            
+            dispatch(pass({ userId, email, password }))
+            
+            if(user){
+                navigate("/verify-email")
+            }else{
+                navigate('/login')
             }
         }catch(error){
             setError(error.message);
@@ -58,23 +60,29 @@ const SignUp = ({}) => {
                 onSubmit={handleSubmit(signup)}>
                     <div className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
                         <Label 
+                        labelFor="name"
                         text="Enter Name"
                         fontSize="20px" />
                         <InputBox
+                        id="name"
+                        autocomplete="name"
                         placeholder="Enter your Name"
                         height='20px'
                         width='20px'
                         type="text"
                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                         {
-                            ...register("name", {
+                            ...register("fullName", {
                                 required: true
                             })
                         } />
                         <Label 
+                        labelFor="email"
                         text="Email"
                         fontSize="20px" />
                         <InputBox
+                        id="email"
+                        autocomplete="email" 
                         placeholder="Enter your Email"
                         height='20px'
                         width='20px'
@@ -93,9 +101,12 @@ const SignUp = ({}) => {
                             })
                         } />
                         <Label 
+                        labelFor="password"
                         text="Password"
                         fontSize="20px" />
                         <InputBox
+                        id="password"
+                        autocomplete="new-password" 
                         placeholder="Enter your Password"
                         height='20px'
                         width='20px'
@@ -106,6 +117,7 @@ const SignUp = ({}) => {
                                 required: true
                             })
                         } />
+                        {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
                         <Button
                         type="submit"
                         text="Sign up"

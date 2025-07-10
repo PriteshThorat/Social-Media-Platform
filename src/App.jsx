@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './App.css'
 import { useEffect, useState } from 'react';
 import Layout from './Layout';
-import authService from './appwrite/auth';
+import authService from './service/auth';
 import { login, logout } from './store/authSlice';
 
 function App() {
