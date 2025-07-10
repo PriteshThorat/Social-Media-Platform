@@ -5,6 +5,7 @@ import Layout from './Layout';
 import authService from './service/auth';
 import { login, logout } from './store/authSlice';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -34,6 +35,7 @@ function App() {
     <>
       <Layout/>
       <Analytics />
+      <SpeedInsights />
     </>
   ) : null;
 };
