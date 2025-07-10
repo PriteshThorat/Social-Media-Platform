@@ -4,46 +4,59 @@ import authService from '../service/auth'
 import { useDispatch, useSelector } from 'react-redux';
 import { pass, login } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 
 const VerifyOTP = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    const inputRefs = useRef([]);
+
     const user = useSelector(state => state.auth.temp)
 
-    const { register, handleSubmit, setValue } = useForm();
+    const [error, setError] = useState('')
+
+    const { register, handleSubmit, setValue, watch } = useForm();
+    const watchParts = watch(["part1", "part2", "part3", "part4", "part5", "part6"]);
+
+    useEffect(() => {
+        inputRefs.current[0]?.focus();
+    }, []);
 
     const verify = async(parts) => {
+        setError('')
+
         const { part1, part2, part3, part4, part5, part6 } = parts
 
         const userOTP = `${part1}${part2}${part3}${part4}${part5}${part6}`
 
-        const isCorrectOTP = await authService.verifyOTP({ email: user.email, userOTP })
+        try {
+            const isCorrectOTP = await authService.verifyOTP({ email: user.email, userOTP })
+    
+            if(isCorrectOTP){
+              const userPassword = user.password
+              const userEmail = user.email
+    
+              const loggedUser = await authService.login({ email: userEmail, password: userPassword })
+              
+              if(loggedUser){
+                dispatch(pass(null))
+                dispatch(login(loggedUser))
 
-        if(isCorrectOTP){
-          const userPassword = user.password
-          const userEmail = user.email
-
-          const loggedUser = await authService.login({ email: userEmail, password: userPassword })
-          
-          if(loggedUser){
-            dispatch(pass(null))
-            dispatch(login(loggedUser))
-
-            navigate("/")
-          }
+                setError('')
+    
+                navigate("/")
+              }
+            }
+        } catch (error) {
+            setError(error)
         }
     }
 
     const registerOptions = (partName) => (
         register(partName, {
             required: true,
-            onChange: (e) => {
-                const value = e.target.value.replace(/\D/g, "");
-                setValue(partName, value);
-            }
-        })
-    )
+    }))
 
     return (
         <form 
@@ -51,7 +64,7 @@ const VerifyOTP = () => {
             className="flex flex-col items-center gap-4" >
             <div className='flex justify-center gap-2'>
                 {
-                    ["part1", "part2", "part3", "part4", "part5", "part6"].map(part => (
+                    ["part1", "part2", "part3", "part4", "part5", "part6"].map((part, index) => (
                         <InputBox
                             key={part}
                             placeholder=""
@@ -61,10 +74,25 @@ const VerifyOTP = () => {
                             inputMode="numeric"
                             pattern="\d*"
                             {...registerOptions(part)}
+                            ref={(el) => (inputRefs.current[index] = el)}
+                            onChange={(e) => {
+                                const value = e.target.value.replace(/\D/g, "");
+                                setValue(part, value); 
+                                if (value && index < 5) {
+                                    inputRefs.current[index + 1]?.focus();
+                                }
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Backspace" && !e.currentTarget.value && index > 0) {
+                                    inputRefs.current[index - 1]?.focus();
+                                }
+                            }}
+                            value={watchParts[index] || ''}
                         />
                     ))
                 }
             </div>
+            {error && <p className="text-red-500 mt-2 text-sm">{error.toString()}</p>}
             <button
                 type="submit"
                 className={`px-4 py-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition"

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Layout from './Layout';
 import authService from './service/auth';
 import { login, logout } from './store/authSlice';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,7 @@ function App() {
   return !loading ? (
     <>
       <Layout/>
+      <Analytics />
     </>
   ) : null;
 };
