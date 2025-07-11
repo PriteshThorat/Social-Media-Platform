@@ -16,21 +16,14 @@ const AuthLayout = ({ authentication = true }) => {
     useEffect(() => {
         (async() => {
             try {
+                await auth.refreshAccessToken()
+                
                 const user = await auth.getCurrentUser()
 
                 if(user)
                     dispatch(login(user));
             } catch (error) {
-                try {
-                    await auth.refreshAccessToken()
-
-                    const user = await auth.getCurrentUser(); 
-
-                    if (user) 
-                        dispatch(login(user));
-                } catch (refreshError) {
-                    console.log("Refresh failed, please login again.");
-                }
+                console.log(error)
             }
         })()
     }, [])
