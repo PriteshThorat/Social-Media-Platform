@@ -20,15 +20,22 @@ function App() {
   }, [themeMode]);
 
   useEffect(() => {
-    authService.getCurrentUser()
-    .then(userData => {
-      if(userData){
-        dispatch(login({userData}));
-      }else{
-        dispatch(logout());
+    (async() => {
+      try {
+        await authService.refreshAccessToken()
+
+        const userData = await authService.getCurrentUser()
+
+        if(userData)
+          dispatch(login({ userData }));
+        else
+          dispatch(logout());
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoading(false)
       }
-    }) 
-    .finally(() => setLoading(false));
+    })()
   }, []);
 
   return !loading ? (
