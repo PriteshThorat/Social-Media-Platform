@@ -45,6 +45,7 @@ const Post = ({avatar, username, fullName, createdAt, content, image, likesCount
                                 <img 
                                 className="w-full h-full object-cover"
                                 src={image} 
+                                loading="lazy"
                                 alt=""/>
                             </div>
                         </div>

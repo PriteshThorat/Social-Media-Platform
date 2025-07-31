@@ -48,7 +48,11 @@ const TextEditor = ({ onUpdate }) => {
                 {
                     previewUrl && (
                         <div className='mt-4'>
-                            <img src={previewUrl} alt="Posted Image" className='rounded-lg w-full'/>
+                            <img 
+                            src={previewUrl} 
+                            loading="lazy"
+                            alt="Posted Image" 
+                            className='rounded-lg w-full'/>
                         </div>
                     )
                 }
