@@ -6,9 +6,11 @@ import authService from './service/auth';
 import { login, logout } from './store/authSlice';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { LoadingSpinner } from './components';
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [loadingText, setLoadingText] = useState("Starting up...");
 
   const dispatch = useDispatch();
 
@@ -22,18 +24,27 @@ function App() {
   useEffect(() => {
     (async() => {
       try {
+        setLoadingText("Refreshing authentication...");
         await authService.refreshAccessToken()
 
+        setLoadingText("Getting user data...");
         const userData = await authService.getCurrentUser()
 
-        if(userData)
+        if(userData) {
+          setLoadingText("Setting up your profile...");
           dispatch(login({ userData }));
-        else
+        } else {
+          setLoadingText("Finishing setup...");
           dispatch(logout());
+        }
       } catch (error) {
+        setLoadingText("Something went wrong, please wait...");
         console.log(error)
       } finally {
-        setLoading(false)
+        setLoadingText("Almost ready...");
+        setTimeout(() => {
+          setLoading(false);
+        }, 500); 
       }
     })()
   }, []);
@@ -44,7 +55,13 @@ function App() {
       <Analytics />
       <SpeedInsights />
     </>
-  ) : null;
+  ) : (
+    <LoadingSpinner 
+      fullScreen={true} 
+      text={loadingText}
+      size="large" 
+    />
+  );
 };
 
 export default App;
