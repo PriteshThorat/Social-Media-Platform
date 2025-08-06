@@ -16,6 +16,7 @@ import TinyMCE from './TinyMCE'
 import DislikeBtn from './DislikeBtn';
 import ThemeBtn from "./ThemeBtn";
 import VerifyOTP from "./VerifyOTP";
+import LoadingSpinner from "./LoadingSpinner";
 
 export {
     AddProfileImg,
@@ -36,4 +37,5 @@ export {
     DislikeBtn,
     ThemeBtn,
     VerifyOTP,
+    LoadingSpinner,
 };
