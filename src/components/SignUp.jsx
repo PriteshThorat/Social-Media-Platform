@@ -7,14 +7,39 @@ import { useDispatch } from 'react-redux';
 import { pass } from '../store/authSlice';
 import auth from '../service/auth'
 import { useState } from 'react';
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Check, X } from 'lucide-react';
+
+const getPasswordStrength = (password) => {
+    if (!password) return { score: 0, label: '', color: '' };
+    
+    let score = 0;
+    const checks = {
+        length: password.length >= 8,
+        lowercase: /[a-z]/.test(password),
+        uppercase: /[A-Z]/.test(password),
+        number: /\d/.test(password),
+        special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+    
+    Object.values(checks).forEach(check => check && score++);
+    
+    if (score <= 2) return { score, label: 'Weak', color: 'bg-red-500', checks };
+    if (score <= 3) return { score, label: 'Fair', color: 'bg-yellow-500', checks };
+    if (score <= 4) return { score, label: 'Good', color: 'bg-blue-500', checks };
+    return { score, label: 'Strong', color: 'bg-green-500', checks };
+};
 
 const SignUp = ({}) => {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, watch } = useForm();
 
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
     const [error, setError] = useState('')
+    const [showPassword, setShowPassword] = useState(false);
+
+    const password = watch('password');
+    const passwordStrength = getPasswordStrength(password);
 
     const signup = async(data) => {
         setError('')
@@ -40,94 +65,177 @@ const SignUp = ({}) => {
     };
 
     return (
-        <>
-            <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4'>
-                <h1 
-                className='text-xl sm:text-2xl md:text-4xl font-extrabold text-gray-800 dark:text-gray-200 mb-4 tracking-wide text-center' >
-                    Create Account
-                </h1>
-                <p 
-                className='mb-6 text-gray-600 dark:text-gray-400 text-sm sm:text-lg text-center'>
-                    Already have an account? 
-                    <Link
-                    to="/login"
-                    className='text-blue-500 dark:text-blue-400 font-semibold hover:underline cursor-pointer'>
-                        Sign in
-                    </Link>
-                </p>
-                <form 
-                className="w-full max-w-sm"
-                onSubmit={handleSubmit(signup)}>
-                    <div className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
-                        <Label 
-                        labelFor="name"
-                        text="Enter Name"
-                        fontSize="20px" />
-                        <InputBox
-                        id="name"
-                        autocomplete="name"
-                        placeholder="Enter your Name"
-                        height='20px'
-                        width='20px'
-                        type="text"
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                        {
-                            ...register("fullName", {
-                                required: true
-                            })
-                        } />
-                        <Label 
-                        labelFor="email"
-                        text="Email"
-                        fontSize="20px" />
-                        <InputBox
-                        id="email"
-                        autocomplete="email" 
-                        placeholder="Enter your Email"
-                        height='20px'
-                        width='20px'
-                        type="email"
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                        {
-                            ...register("email", {
-                                required: true,
-                                validate: {
-                                    matchPattern: (value) => {
-                                        (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value))
-                                        ||
-                                        "Email address must be a valid address"
-                                    }
-                                }
-                            })
-                        } />
-                        <Label 
-                        labelFor="password"
-                        text="Password"
-                        fontSize="20px" />
-                        <InputBox
-                        id="password"
-                        autocomplete="new-password" 
-                        placeholder="Enter your Password"
-                        height='20px'
-                        width='20px'
-                        type="password"
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                        {
-                            ...register("password", {
-                                required: true
-                            })
-                        } />
-                        {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
-                        <Button
-                        type="submit"
-                        text="Sign up"
-                        height="20px"
-                        width="20px"
-                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold py-2 rounded-md transition duration-300 shadow-md" />
-                    </div>
-                </form>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 dark:from-gray-900 dark:via-purple-900 dark:to-pink-900 px-4 py-8">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-orange-400/20 to-red-400/20 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="relative w-full max-w-md">
+        {/* Welcome Section */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl mb-6 shadow-lg">
+            <User className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Create Account
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Join us today and get started
+          </p>
+        </div>
+
+        {/* Form Card */}
+        <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border border-white/20 dark:border-gray-700/20 rounded-2xl shadow-2xl p-8">
+          <div onSubmit={handleSubmit(signup)} className="space-y-6">
+            {/* Full Name Field */}
+            <div className="space-y-2">
+              <Label labelFor="name" text="Full Name" />
+              <div className="relative group">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
+                <InputBox
+                  id="name"
+                  autoComplete="name"
+                  placeholder="Enter your full name"
+                  type="text"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  {...register("fullName", {
+                    required: true
+                  })}
+                />
+              </div>
             </div>
-        </>
+
+            {/* Email Field */}
+            <div className="space-y-2">
+              <Label labelFor="email" text="Email Address" />
+              <div className="relative group">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
+                <InputBox
+                  id="email"
+                  autoComplete="email"
+                  placeholder="Enter your email address"
+                  type="email"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  {...register("email", {
+                    required: true,
+                    validate: {
+                      matchPattern: (value) => (
+                        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                        "Email address must be a valid address"
+                      )
+                    }
+                  })}
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="space-y-2">
+              <Label labelFor="password" text="Password" />
+              <div className="relative group">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
+                <InputBox
+                  id="password"
+                  autoComplete="new-password"
+                  placeholder="Create a strong password"
+                  type={showPassword ? "text" : "password"}
+                  className="w-full pl-11 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  {...register("password", {
+                    required: true
+                  })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+              
+              {/* Password Strength Indicator */}
+              {password && (
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-gray-600 dark:text-gray-400">Password strength:</span>
+                    <span className={`font-semibold ${
+                      passwordStrength.label === 'Strong' ? 'text-green-600 dark:text-green-400' :
+                      passwordStrength.label === 'Good' ? 'text-blue-600 dark:text-blue-400' :
+                      passwordStrength.label === 'Fair' ? 'text-yellow-600 dark:text-yellow-400' :
+                      'text-red-600 dark:text-red-400'
+                    }`}>
+                      {passwordStrength.label}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
+                      style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
+                    ></div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400">
+                    {Object.entries({
+                      'At least 8 characters': passwordStrength.checks?.length,
+                      'Lowercase letter': passwordStrength.checks?.lowercase,
+                      'Uppercase letter': passwordStrength.checks?.uppercase,
+                      'Number': passwordStrength.checks?.number,
+                      'Special character': passwordStrength.checks?.special
+                    }).slice(0, 4).map(([requirement, met]) => (
+                      <div key={requirement} className="flex items-center space-x-1">
+                        {met ? 
+                          <Check className="w-3 h-3 text-green-500" /> : 
+                          <X className="w-3 h-3 text-red-500" />
+                        }
+                        <span className={met ? 'text-green-600 dark:text-green-400' : ''}>{requirement}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center space-x-2 group"
+            >
+              <span>Create Account</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+
+          {/* Sign In Link */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Already have an account?{' '}
+              <Link
+                to="/login"
+                className="font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-500 dark:hover:text-purple-300 transition-colors"
+              >
+                Sign in here
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Security Badge */}
+        <div className="mt-6 text-center">
+          <div className="inline-flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+            <Lock className="w-3 h-3" />
+            <span>Your information is secure and encrypted</span>
+          </div>
+        </div>
+      </div>
+    </div>
     );
 };
 

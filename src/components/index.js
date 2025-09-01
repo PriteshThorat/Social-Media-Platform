@@ -17,6 +17,7 @@ import DislikeBtn from './DislikeBtn';
 import ThemeBtn from "./ThemeBtn";
 import VerifyOTP from "./VerifyOTP";
 import LoadingSpinner from "./LoadingSpinner";
+import OTPTimer from './OTPTimer'
 
 export {
     AddProfileImg,
@@ -38,4 +39,5 @@ export {
     ThemeBtn,
     VerifyOTP,
     LoadingSpinner,
+    OTPTimer
 };

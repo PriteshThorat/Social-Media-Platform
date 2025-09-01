@@ -3,7 +3,7 @@ const Label = ({labelFor, text, fontSize}) => {
         <>
             <label
                 htmlFor={labelFor}
-                className={`${fontSize} block text-lg font-medium text-gray-700 dark:text-gray-300 mb-1`} >
+                className={`${fontSize} block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2`} >
                 {text}
             </label>
         </>
