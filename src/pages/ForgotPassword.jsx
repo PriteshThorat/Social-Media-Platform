@@ -108,43 +108,6 @@ const ForgotPassword = () => {
         setMessage('');
     };
 
-    /*const handleEmailSubmit = async (data) => {
-        setError('');
-        setMessage('');
-        try {
-            await authService.requestOTP({ email: data.email });
-
-            setEmail(data.email);
-            setMessage('OTP sent to your email.');
-            setStep(2);
-
-            reset();
-        } catch (err) {
-            setError(err.message || 'Failed to send OTP. Please try again.');
-        }
-    };*/
-
-    /*const handleResetSubmit = async (data) => {
-        setError('');
-        setMessage('');
-
-        try {
-            await authService.changePassword({
-                email,
-                userOTP: data.otp,
-                newPassword: data.newPassword
-            });
-
-            setMessage('Password reset successful! Redirecting to login...');
-
-            reset();
-            
-            navigate('/login')
-        } catch (err) {
-            setError(err.message || 'Failed to reset password.');
-        }
-    };*/
-
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-green-900 dark:to-blue-900 px-4 py-8">
       {/* Background decoration */}
@@ -362,7 +325,7 @@ const ForgotPassword = () => {
         {/* Back to Login */}
         <div className="mt-6 text-center">
           <button
-            onClick={() => console.log('Navigate to login')}
+            onClick={() => { navigate(-1) }}
             className="inline-flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
           >
             <ArrowLeft className="w-3 h-3" />

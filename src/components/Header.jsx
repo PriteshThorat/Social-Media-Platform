@@ -77,8 +77,13 @@ const Header = () => {
                 aria-expanded={open}
               >
                 {/* Avatar */}
-                <div className="w-8 h-8 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-gray-800 shadow-md">
-                  <img className="w-5 h-5" src={userData?.data?.avatar || ''} loading='lazy' />
+                <div className="w-8 h-8 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-gray-800 shadow-md overflow-hidden">
+                  <img 
+                    className="w-full h-full rounded-full object-cover" 
+                    src={userData?.data?.avatar || ''} 
+                    loading='lazy'
+                    alt="User avatar"
+                  />
                 </div>
                 
                 {/* Username (hidden on mobile) */}
@@ -102,8 +107,7 @@ const Header = () => {
                   <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 border-b border-gray-200/50 dark:border-gray-700/50">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-md">
-                        <img className="w-5 h-5" src={userData?.data?.avatar || ''} loading='lazy' />
-                        {/*<User className="w-5 h-5 text-white" />*/}
+                        <img className="w-full h-full rounded-full object-cover" src={userData?.data?.avatar || ''} loading='lazy' />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
