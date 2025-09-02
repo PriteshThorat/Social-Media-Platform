@@ -199,7 +199,7 @@ const ForgotPassword = () => {
               {/* Messages */}
               {error && (
                 <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                  <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+                  <p className="text-red-600 dark:text-red-400 text-sm">{error.toString()}</p>
                 </div>
               )}
               {message && (
@@ -302,7 +302,7 @@ const ForgotPassword = () => {
               {/* Messages */}
               {error && (
                 <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                  <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+                  <p className="text-red-600 dark:text-red-400 text-sm">{error.toString()}</p>
                 </div>
               )}
               {message && (

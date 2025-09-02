@@ -88,7 +88,7 @@ const SignUp = ({}) => {
 
         {/* Form Card */}
         <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border border-white/20 dark:border-gray-700/20 rounded-2xl shadow-2xl p-8">
-          <div onSubmit={handleSubmit(signup)} className="space-y-6">
+          <form onSubmit={handleSubmit(signup)} className="space-y-6">
             {/* Full Name Field */}
             <div className="space-y-2">
               <Label labelFor="name" text="Full Name" />
@@ -199,7 +199,7 @@ const SignUp = ({}) => {
             {/* Error Message */}
             {error && (
               <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+                <p className="text-red-600 dark:text-red-400 text-sm">{error.toString()}</p>
               </div>
             )}
 
@@ -211,7 +211,7 @@ const SignUp = ({}) => {
               <span>Create Account</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
-          </div>
+          </form>
 
           {/* Sign In Link */}
           <div className="mt-8 text-center">
