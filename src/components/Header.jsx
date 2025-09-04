@@ -1,4 +1,5 @@
 import { Logo, ThemeBtn } from './index'
+import SearchBox from './SearchBox'
 import { useSelector } from 'react-redux'
 import { logout } from '../store/authSlice'
 import { useDispatch } from 'react-redux'
@@ -52,7 +53,7 @@ const Header = () => {
        <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300">
       <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
         {/* Logo Section */}
-        <div className="flex items-center">
+        <div className="flex items-center flex-shrink-0">
           <Logo />
         </div>
 

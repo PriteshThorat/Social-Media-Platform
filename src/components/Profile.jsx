@@ -47,7 +47,7 @@ const Profile = ({avatar, alt, fullName, username}) => {
                 </div>
                 
                 {/* Profile Information */}
-                <div className='text-center mt-8 space-y-4'>
+                <div className='text-center mt-8 space-y-6'>
                     <div>
                         <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight'>
                             {fullName}

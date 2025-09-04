@@ -5,6 +5,7 @@ import auth from '../service/auth'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login as authLogin } from '../store/authSlice';
+import imageCompression from "browser-image-compression";
 
 const AddProfileImg = () => {
     const navigate = useNavigate();
@@ -22,8 +23,20 @@ const AddProfileImg = () => {
     const submit = async(e) => {
         e.preventDefault();
 
+        const options = {
+            maxSizeMB: 1,              // target max file size (in MB)
+            maxWidthOrHeight: 1024,    // resize if image is too large
+            initialQuality: 0.7,       // set quality (0.1 - 1.0)
+            useWebWorker: true
+        };
+
         try {
-            const userData = await auth.updateAvatar({ avatar: file })
+            const compressedFile = await imageCompression(file, options);
+
+            const compressedBlob = URL.createObjectURL(compressedFile);
+            setPreviewUrl(compressedBlob);
+
+            const userData = await auth.updateAvatar({ avatar: compressedFile })
 
             if(userData){
                 dispatch(authLogin(userData))

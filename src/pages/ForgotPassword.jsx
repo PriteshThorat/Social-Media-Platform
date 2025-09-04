@@ -246,7 +246,8 @@ const ForgotPassword = () => {
                     placeholder="Enter 6-digit code"
                     type="text"
                     maxLength="6"
-                    className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 text-center text-lg font-mono tracking-wider"
+                    textAlign="left"
+                    className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 text-lg font-mono tracking-wider"
                     {...register("otp", { required: "OTP is required" })}
                   />
                 </div>
