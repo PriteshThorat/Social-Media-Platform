@@ -8,11 +8,17 @@ import { useNavigate } from 'react-router-dom';
 import useTimeAgo from '../hooks/useTimeAgo';
 import { ThemeBtn } from '../components/index';
 import { TweetProfileSkeleton, UserProfileSkeleton } from '../Skeletons/index'
+import { useSelector } from "react-redux";
+import auth from '../service/auth'
+import { useToast } from '../components/Toast';
 
 const Profile = () => {
     const [tweets, setTweets] = useState([]);
     const [user, setUser] = useState({})
     const [loading, setLoading] = useState(true);
+
+    const authStatus = useSelector(state => state?.auth?.status);
+    const { warning, ToastContainer } = useToast();
 
     const navigate = useNavigate();
 
@@ -20,10 +26,14 @@ const Profile = () => {
 
     const submit = async(tweetId) => {
         try {
-            await service.updateLikes({ tweetId })
+            if(authStatus){
+                await service.updateLikes({ tweetId })
 
-            const data = await service.getUserPosts({ username })
-            setTweets(data.data)
+                const data = await service.getUserPosts({ username })
+                setTweets(data.data)
+            }else{
+                warning("Please sign in to like posts", 5000);
+            }
         } catch (error) {
             console.log(error)
         }
@@ -49,7 +59,9 @@ const Profile = () => {
     }, [username])
 
     return (
-        <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950'>
+        <>
+            <ToastContainer />
+            <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950'>
             {/* Enhanced Navigation Bar */}
             <div className='sticky top-0 z-10 backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border-b border-white/20 dark:border-gray-700/30 shadow-sm'>
                 <div className="container mx-auto flex justify-between items-center px-6 py-4">
@@ -150,6 +162,7 @@ const Profile = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

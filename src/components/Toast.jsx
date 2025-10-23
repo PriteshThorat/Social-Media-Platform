@@ -102,7 +102,7 @@ const Toast = ({
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 @keyframes toast-progress {
                     from {
                         width: 100%;

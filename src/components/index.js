@@ -20,7 +20,6 @@ import LoadingSpinner from "./LoadingSpinner";
 import OTPTimer from './OTPTimer'
 import FloatingActionButton from './FloatingActionButton';
 import Toast, { ToastContainer, useToast } from './Toast';
-import SearchBox from './SearchBox';
 
 export {
     AddProfileImg,
@@ -46,6 +45,5 @@ export {
     FloatingActionButton,
     Toast,
     ToastContainer,
-    useToast,
-    SearchBox
+    useToast
 };
