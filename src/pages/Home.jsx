@@ -4,18 +4,27 @@ import service from '../service/config';
 import { useEffect, useState, useRef } from 'react';
 import useTimeAgo from '../hooks/useTimeAgo';
 import { HomeSkeleton } from '../Skeletons/index'
+import { useSelector } from "react-redux";
+import { useToast } from '../components/Toast';
 
 const Home = () => {
     const [tweets, setTweets] = useState([]);
     const [loading, setLoading] = useState(true);
     const createPostRef = useRef(null);
 
+    const authStatus = useSelector(state => state?.auth?.status);
+    const { warning, ToastContainer } = useToast();
+
     const submit = async(tweetId) => {
         try {
-            await service.updateLikes({ tweetId })
+            if(authStatus){
+                await service.updateLikes({ tweetId })
 
-            const data = await service.getPosts();
-            setTweets(data?.data);
+                const data = await service.getPosts();
+                setTweets(data?.data);
+            }else{
+                warning("Please sign in to like posts", 5000);
+            }
         } catch (error) {
             console.log(error)
         }
@@ -52,7 +61,9 @@ const Home = () => {
     }, []);
     
     return (
-        <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950'>
+        <>
+            <ToastContainer />
+            <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950'>
             <div className='max-w-4xl mx-auto px-4 py-6'>
                 {/* Create Post Section */}
                 <div className='mb-8' ref={createPostRef}>
@@ -150,6 +161,7 @@ const Home = () => {
             {/* Floating Action Button */}
             <FloatingActionButton onClick={scrollToCreatePost} />
         </div>
+        </>
     );
 };
 

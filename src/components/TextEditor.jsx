@@ -3,11 +3,16 @@ import { useForm } from 'react-hook-form';
 import service from '../service/config';
 import { useState } from 'react';
 import imageCompression from "browser-image-compression";
+import { useSelector } from "react-redux";
+import { useToast } from './Toast';
 
 const TextEditor = ({ onUpdate }) => {
     const [previewUrl, setPreviewUrl] = useState('')
     const [file, setFile] = useState(null)
     const [error, setError] = useState('')
+
+    const authStatus = useSelector(state => state?.auth?.status);
+    const { warning, ToastContainer } = useToast();
 
     const { register, handleSubmit, setValue, control, getValues, reset } = useForm({
         defaultValues: {
@@ -16,6 +21,10 @@ const TextEditor = ({ onUpdate }) => {
     });
 
     const postTweet = async(data) => {
+        if(!authStatus){
+            warning("Please sign in to share your post", 5000);
+            return;
+        }
         setError('')
 
          const options = {
@@ -55,7 +64,9 @@ const TextEditor = ({ onUpdate }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit(postTweet)} className="space-y-4">
+        <>
+            <ToastContainer />
+            <form onSubmit={handleSubmit(postTweet)} className="space-y-4">
             {/* Text Editor */}
             <div className="relative">
                 <TinyMCE 
@@ -157,6 +168,7 @@ const TextEditor = ({ onUpdate }) => {
                 />
             </div>
         </form>
+        </>
     );
 };
 

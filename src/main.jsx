@@ -16,12 +16,12 @@ const router = createBrowserRouter(
       <Route path="signup" element={<SignUp />} />
       <Route path="forgot-password" element={<ForgotPassword />} />
       <Route path="verify-email" element={<VerifyOTP />} />
+      <Route index element={<Home />} />
+      <Route path="profile/:username" element={<Profile />} />
 
       {/* Protected Routes */}
       <Route element={<AuthLayout authentication={true} />}>
-        <Route index element={<Home />} />
         <Route path="change-avatar" element={<AddProfileImg />} />
-        <Route path="profile/:username" element={<Profile />} />
       </Route>
     </Route>
   )
