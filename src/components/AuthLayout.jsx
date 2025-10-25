@@ -29,8 +29,7 @@ const AuthLayout = ({ authentication = true }) => {
     }, [])
 
     useEffect(() => {
-        if (authentication /*&& !authStatus*/) {
-            console.log("Hey")
+        if (authentication && !authStatus) {
             navigate('/login', { replace: true });
         } else {
             setIsLoading(false);

@@ -25,15 +25,17 @@ const Profile = () => {
     const { username } = useParams();
 
     const submit = async(tweetId) => {
-        try {
-            if(authStatus){
-                await service.updateLikes({ tweetId })
+        if(!authStatus){
+            warning("Please sign in to like posts", 5000);
+            return
+        }
 
-                const data = await service.getUserPosts({ username })
-                setTweets(data.data)
-            }else{
-                warning("Please sign in to like posts", 5000);
-            }
+        try {
+            await service.updateLikes({ tweetId })
+
+            const data = await service.getUserPosts({ username })
+            setTweets(data.data)
+            console.log(data.data)
         } catch (error) {
             console.log(error)
         }
@@ -49,6 +51,8 @@ const Profile = () => {
                 else {
                     setTweets(data.data)
                     setUser(data.data[0].owner[0])
+
+                    console.log(data.data)
                 }
             } catch (error) {
                 console.log(error)

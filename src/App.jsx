@@ -22,7 +22,7 @@ function App() {
   }, [themeMode]);
 
   useEffect(() => {
-    (async() => {
+    (async () => {
       try {
         setLoadingText("Refreshing authentication...");
         await authService.refreshAccessToken()
@@ -30,9 +30,9 @@ function App() {
         setLoadingText("Getting user data...");
         const userData = await authService.getCurrentUser()
 
-        if(userData) {
+        if (userData) {
           setLoadingText("Setting up your profile...");
-          dispatch(login({ userData }));
+          dispatch(login(userData));
         } else {
           setLoadingText("Finishing setup...");
           dispatch(logout());
@@ -44,22 +44,22 @@ function App() {
         setLoadingText("Almost ready...");
         setTimeout(() => {
           setLoading(false);
-        }, 500); 
+        }, 500);
       }
     })()
   }, []);
 
   return !loading ? (
     <>
-      <Layout/>
+      <Layout />
       <Analytics />
       <SpeedInsights />
     </>
   ) : (
-    <LoadingSpinner 
-      fullScreen={true} 
+    <LoadingSpinner
+      fullScreen={true}
       text={loadingText}
-      size="large" 
+      size="large"
     />
   );
 };
