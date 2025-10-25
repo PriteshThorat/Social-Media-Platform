@@ -20,7 +20,6 @@ const Header = () => {
     const status = useSelector(state => state.auth.status);
     const userData = useSelector(state => state.auth.user);
 
-
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 

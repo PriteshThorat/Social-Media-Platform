@@ -35,7 +35,6 @@ const Profile = () => {
 
             const data = await service.getUserPosts({ username })
             setTweets(data.data)
-            console.log(data.data)
         } catch (error) {
             console.log(error)
         }
@@ -51,8 +50,6 @@ const Profile = () => {
                 else {
                     setTweets(data.data)
                     setUser(data.data[0].owner[0])
-
-                    console.log(data.data)
                 }
             } catch (error) {
                 console.log(error)
