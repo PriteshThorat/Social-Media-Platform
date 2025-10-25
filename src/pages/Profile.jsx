@@ -9,7 +9,6 @@ import useTimeAgo from '../hooks/useTimeAgo';
 import { ThemeBtn } from '../components/index';
 import { TweetProfileSkeleton, UserProfileSkeleton } from '../Skeletons/index'
 import { useSelector } from "react-redux";
-import auth from '../service/auth'
 import { useToast } from '../components/Toast';
 
 const Profile = () => {
@@ -35,7 +34,6 @@ const Profile = () => {
 
             const data = await service.getUserPosts({ username })
             setTweets(data.data)
-            console.log(data.data)
         } catch (error) {
             console.log(error)
         }
@@ -51,8 +49,6 @@ const Profile = () => {
                 else {
                     setTweets(data.data)
                     setUser(data.data[0].owner[0])
-
-                    console.log(data.data)
                 }
             } catch (error) {
                 console.log(error)

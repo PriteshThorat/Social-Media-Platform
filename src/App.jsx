@@ -30,9 +30,9 @@ function App() {
         setLoadingText("Getting user data...");
         const userData = await authService.getCurrentUser()
 
-        if (userData) {
+        if (userData?.data) {
           setLoadingText("Setting up your profile...");
-          dispatch(login(userData));
+          dispatch(login(userData.data));
         } else {
           setLoadingText("Finishing setup...");
           dispatch(logout());
@@ -40,6 +40,8 @@ function App() {
       } catch (error) {
         setLoadingText("Something went wrong, please wait...");
         console.log(error)
+        // Ensure redux reflects logged-out state on failure
+        dispatch(logout());
       } finally {
         setLoadingText("Almost ready...");
         setTimeout(() => {

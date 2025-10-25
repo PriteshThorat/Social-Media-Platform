@@ -25,9 +25,9 @@ const Login = () => {
         try{
             const user = await authService.login({ email, password });
 
-            if(user){
-                dispatch(authLogin(user));
-
+            if (user?.data?.user) {
+                // Store the actual user object in Redux so UI updates immediately
+                dispatch(authLogin(user.data.user));
                 navigate("/");
             }
         }catch(error){

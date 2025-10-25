@@ -20,7 +20,6 @@ const Header = () => {
     const status = useSelector(state => state.auth.status);
     const userData = useSelector(state => state.auth.user);
 
-
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 
@@ -62,7 +61,7 @@ const Header = () => {
           <ThemeBtn />
 
           {/* For Unlogged user show login button */}
-          {!status && (
+          {(!status && (location.pathname !== '/login')) && (
             <button
               onClick={() => navigate('/login')}
               className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium text-sm rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"

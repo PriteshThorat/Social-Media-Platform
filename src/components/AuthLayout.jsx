@@ -20,8 +20,8 @@ const AuthLayout = ({ authentication = true }) => {
                 
                 const user = await auth.getCurrentUser()
 
-                if(user)
-                    dispatch(login(user));
+                if(user?.data)
+                    dispatch(login(user.data));
             } catch (error) {
                 console.log(error)
             }
