@@ -9,7 +9,6 @@ import useTimeAgo from '../hooks/useTimeAgo';
 import { ThemeBtn } from '../components/index';
 import { TweetProfileSkeleton, UserProfileSkeleton } from '../Skeletons/index'
 import { useSelector } from "react-redux";
-import auth from '../service/auth'
 import { useToast } from '../components/Toast';
 
 const Profile = () => {
