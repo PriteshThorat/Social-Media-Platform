@@ -91,7 +91,7 @@ const Header = () => {
                 <div className="w-8 h-8 rounded-full flex items-center justify-center ring-2 ring-white dark:ring-gray-800 shadow-md overflow-hidden">
                   <img 
                     className="w-full h-full rounded-full object-cover" 
-                    src={userData?.data?.avatar || ''} 
+                    src={userData?.avatar || ''} 
                     loading='lazy'
                     alt="User avatar"
                   />
@@ -99,7 +99,7 @@ const Header = () => {
                 
                 {/* Username (hidden on mobile) */}
                 <span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
-                  {userData?.data?.fullName}
+                  {userData?.fullName}
                 </span>
                 
                 {/* Chevron */}
@@ -118,14 +118,14 @@ const Header = () => {
                   <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 border-b border-gray-200/50 dark:border-gray-700/50">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center shadow-md">
-                        <img className="w-full h-full rounded-full object-cover" src={userData?.data?.avatar || ''} loading='lazy' />
+                        <img className="w-full h-full rounded-full object-cover" src={userData?.avatar || ''} loading='lazy' />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                          {userData?.data?.fullName}
+                          {userData?.fullName}
                         </p>
                         <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
-                          {userData?.data?.email}
+                          {userData?.email}
                         </p>
                       </div>
                     </div>

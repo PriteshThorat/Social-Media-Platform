@@ -1,6 +1,7 @@
 import { DislikeBtn, LikeBtn, ProfilePicture } from './index';
 import parse from 'html-react-parser';
 import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const Post = ({avatar, username, fullName, createdAt, content, image, likesCount, isLikedByCurrentUser, onLikeToggle }) => {
     return (

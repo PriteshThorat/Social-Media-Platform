@@ -12,11 +12,11 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App/>}>
       {/* Unprotected Routes */}
+      <Route index element={<Home />} />
       <Route path="login" element={<Login />} />
       <Route path="signup" element={<SignUp />} />
       <Route path="forgot-password" element={<ForgotPassword />} />
       <Route path="verify-email" element={<VerifyOTP />} />
-      <Route index element={<Home />} />
       <Route path="profile/:username" element={<Profile />} />
 
       {/* Protected Routes */}
