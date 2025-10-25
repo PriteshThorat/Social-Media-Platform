@@ -27,15 +27,15 @@ export class AuthService {
             }
 
             const result = await response.json();
-        
-            return result; 
+
+            return result;
         } catch (error) {
             console.log(error);
-            throw error; 
+            throw error;
         }
     }
 
-    async login({ email, password }){
+    async login({ email, password }) {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -57,22 +57,22 @@ export class AuthService {
             if (!response.ok) {
                 const errData = await response?.json();
 
-                if(errData.action === "VERIFY_EMAIL")
+                if (errData.action === "VERIFY_EMAIL")
                     throw new Error(errData.action || "");
-    
+
                 throw new Error(errData.message || "Unknown error");
             }
 
             const result = await response?.json();
-        
-            return result; 
+
+            return result;
         } catch (error) {
             console.log(error)
-            throw error; 
+            throw error;
         }
     }
 
-    async verifyOTP({ email, userOTP }){
+    async verifyOTP({ email, userOTP }) {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -96,15 +96,15 @@ export class AuthService {
             }
 
             const result = await response.json();
-        
-            return result; 
+
+            return result;
         } catch (error) {
             console.log(error)
-            throw error; 
+            throw error;
         }
     }
 
-    async getCurrentUser(){
+    async getCurrentUser() {
         const requestOptions = {
             method: "GET",
             credentials: "include",
@@ -119,15 +119,15 @@ export class AuthService {
             }
 
             const result = await response.json();
-        
-            return result; 
+
+            return result;
         } catch (error) {
             console.log(error);
-            throw error; 
+            throw error;
         }
     }
 
-    async logout(){
+    async logout() {
         const requestOptions = {
             method: "GET",
             redirect: "follow",
@@ -142,15 +142,15 @@ export class AuthService {
             }
 
             const result = await response.json();
-        
-            return result; 
+
+            return result;
         } catch (error) {
             console.log(error);
-            throw error; 
+            throw error;
         }
     }
 
-    async updateAvatar({ avatar }){
+    async updateAvatar({ avatar }) {
         const formdata = new FormData();
         formdata.append("avatar", avatar)
 
@@ -169,15 +169,15 @@ export class AuthService {
             }
 
             const result = await response.json();
-        
-            return result; 
+
+            return result?.data
         } catch (error) {
             console.log(error);
-            throw error; 
+            throw error;
         }
     }
 
-    async requestOTP({ email }){
+    async requestOTP({ email }) {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -200,15 +200,15 @@ export class AuthService {
             }
 
             const result = await response.json();
-        
-            return result; 
+
+            return result;
         } catch (error) {
             console.log(error);
-            throw error; 
+            throw error;
         }
     }
 
-    async changePassword({ email, userOTP, newPassword }){
+    async changePassword({ email, userOTP, newPassword }) {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -233,15 +233,15 @@ export class AuthService {
             }
 
             const result = await response.json();
-        
-            return result; 
+
+            return result;
         } catch (error) {
             console.log(error);
-            throw error; 
+            throw error;
         }
     }
 
-    async refreshAccessToken(){
+    async refreshAccessToken() {
         const requestOptions = {
             method: "GET",
             redirect: "follow",
@@ -256,11 +256,11 @@ export class AuthService {
             }
 
             const result = await response.json();
-        
-            return result; 
+
+            return result;
         } catch (error) {
             console.log(error);
-            throw error; 
+            throw error;
         }
     }
 };

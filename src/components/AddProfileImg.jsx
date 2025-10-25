@@ -15,8 +15,8 @@ const AddProfileImg = () => {
     const [previewUrl, setPreviewUrl] = useState('');
      
     const user = useSelector(state => state.auth.user);
-    const fullName = user?.data?.fullName
-    const avatar = user?.data?.avatar
+    const fullName = user?.fullName
+    const avatar = user?.avatar
 
     const { register } = useForm();
 
