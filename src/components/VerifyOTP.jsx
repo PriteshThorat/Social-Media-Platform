@@ -43,7 +43,7 @@ const VerifyOTP = () => {
               
               if(loggedUser){
                 dispatch(pass(null))
-                dispatch(login(loggedUser))
+                dispatch(login(loggedUser.data.user))
 
                 setError('')
     
@@ -154,9 +154,8 @@ const VerifyOTP = () => {
                         type="button"
                         disabled={isLoading}
                         className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold text-sm underline decoration-2 underline-offset-2 hover:decoration-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={() => {
-                            // Add resend OTP logic here
-                            console.log('Resend OTP');
+                        onClick={async() => {
+                            await authService.requestOTP({ email: user.email })
                         }}
                     >
                         Resend Code
