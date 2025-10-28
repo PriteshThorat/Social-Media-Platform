@@ -10,7 +10,7 @@ const Layout = () => {
         <>
             {!isProfilePage && <Header/>}
             <Outlet />
-            <ScrollRestoration getKey={(location) => location.pathname} />
+            <ScrollRestoration />
         </>
     );
 };
