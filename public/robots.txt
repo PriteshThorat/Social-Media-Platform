@@ -6,4 +6,4 @@ Disallow: /change-avatar/
 
 Allow: /profile/
 
-Sitemap: https://social-media-platform-seven-orpin.vercel.app/sitemap.xml
+Sitemap: https://social-media-platform-seven-orpin.vercel.app/mysite.xml
