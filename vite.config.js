@@ -9,9 +9,9 @@ export default defineConfig({
     react(), 
     tailwindcss(),
     sitemap({
-      baseURL: 'ttps://social-media-platform-seven-orpin.vercel.app', // Replace with your actual domain
-      // Optionally, specify URLs manually if not all routes are automatically discoverable
-      urls: ['/profile'],
+      hostname: 'https://social-media-platform-seven-orpin.vercel.app',
+      exclude: ['/404'],                 
+      changefreq: 'daily',
     }),
   ],
   server: {
