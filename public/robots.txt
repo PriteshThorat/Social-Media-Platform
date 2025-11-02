@@ -1,9 +1,0 @@
-User-agent: *
-Disallow: /login/
-Disallow: /signup/
-Disallow: /forgot-password/
-Disallow: /change-avatar/
-
-Allow: /profile/
-
-Sitemap: https://social-media-platform-seven-orpin.vercel.app/sitemap.xml

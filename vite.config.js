@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from "@tailwindcss/vite";
-import sitemap from 'vite-sitemap';
+import sitemap from 'vite-plugin-sitemap';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -9,9 +9,9 @@ export default defineConfig({
     react(), 
     tailwindcss(),
     sitemap({
-      hostname: 'https://social-media-platform-seven-orpin.vercel.app',
-      exclude: ['/404'],                 
-      changefreq: 'daily',
+      hostname: 'https://social-media-platform-seven-orpin.vercel.app', // full domain required
+      routes: ['/'],   // add all your routes
+      exclude: ['/login', '/signup', '/forgot-password', '/change-avatar'],
     }),
   ],
   server: {
