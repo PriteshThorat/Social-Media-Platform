@@ -112,7 +112,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/me/`, requestOptions);
+            const response = await fetch(`${conf.renderUrl}/users/me`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.action || "Unknown error");
