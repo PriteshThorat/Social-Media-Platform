@@ -20,7 +20,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/create-account`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/create-account`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -53,7 +53,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/login`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/login`, requestOptions);
             if (!response.ok) {
                 const errData = await response?.json();
 
@@ -89,7 +89,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/verify-otp`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/verify-otp`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -112,7 +112,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/me`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/me`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.action || "Unknown error");
@@ -135,7 +135,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/logout`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/logout`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -162,7 +162,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/u/avatar`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/u/avatar`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -193,7 +193,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/r/otp`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/r/otp`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -226,7 +226,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/c/password`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/c/password`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -249,7 +249,7 @@ export class AuthService {
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/users/new-access-token`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/users/new-access-token`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");

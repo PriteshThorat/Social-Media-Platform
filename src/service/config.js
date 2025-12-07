@@ -16,7 +16,7 @@ export class Service{
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/tweet/t/upload`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/tweet/t/upload`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -39,7 +39,7 @@ export class Service{
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/like/tweet/${tweetId}`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/like/tweet/${tweetId}`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -62,7 +62,7 @@ export class Service{
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/home/all-content`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/home/all-content`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
@@ -85,7 +85,7 @@ export class Service{
         };
 
         try {
-            const response = await fetch(`${conf.renderUrl}/home/user-content/${username}`, requestOptions);
+            const response = await fetch(`${conf.vercelUrl}/home/user-content/${username}`, requestOptions);
             if (!response.ok) {
                 const errData = await response.json();
                 throw new Error(errData.message || "Unknown error");
