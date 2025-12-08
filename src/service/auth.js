@@ -105,7 +105,6 @@ export class AuthService {
     }
 
     async getCurrentUser() {
-        console.log('conf.vercelUrl', conf.vercelUrl)
         const requestOptions = {
             method: "GET",
             credentials: "include",

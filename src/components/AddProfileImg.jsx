@@ -13,6 +13,7 @@ const AddProfileImg = () => {
 
     const [file, setFile] = useState(null)
     const [previewUrl, setPreviewUrl] = useState('');
+    const [error, setError] = useState("");
      
     const user = useSelector(state => state.auth.user);
     const fullName = user?.fullName
@@ -21,12 +22,13 @@ const AddProfileImg = () => {
     const { register } = useForm();
 
     const submit = async(e) => {
-        e.preventDefault();
+        e.preventDefault()
+        setError("")
 
         const options = {
-            maxSizeMB: 1,              // target max file size (in MB)
-            maxWidthOrHeight: 1024,    // resize if image is too large
-            initialQuality: 0.7,       // set quality (0.1 - 1.0)
+            maxSizeMB: 1,              
+            maxWidthOrHeight: 1024, 
+            initialQuality: 0.7,       
             useWebWorker: true
         };
 
@@ -44,7 +46,9 @@ const AddProfileImg = () => {
                 navigate("/")
             }
         } catch (error) {
-            console.log(error);
+            console.log(error)
+
+            setError(error)
         }
     };
 
@@ -143,6 +147,14 @@ const AddProfileImg = () => {
                         />
                     </div>
                 </div>
+
+                {/* Error Message */}
+                {
+                    error && (
+                        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                            <p className="text-red-600 dark:text-red-400 text-sm">{error.toString().replace(/:.*?:/, ":")}</p>
+                        </div>
+                )}
                 
                 {/* Action Button */}
                 <div className="mt-6">

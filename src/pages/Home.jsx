@@ -120,7 +120,7 @@ const Home = () => {
                                                 avatar={tweet.owner[0].avatar} 
                                                 username={tweet.owner[0].username} 
                                                 fullName={tweet.owner[0].fullName} 
-                                                createdAt={useTimeAgo(tweet.createdAt)} 
+                                                createdAt={useTimeAgo(tweet.updatedAt)} 
                                                 content={tweet.content} 
                                                 image={tweet.image || ""}
                                                 likesCount={tweet.likesCount}
