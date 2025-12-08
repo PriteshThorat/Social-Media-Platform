@@ -10,6 +10,7 @@ import { ThemeBtn } from '../components/index';
 import { TweetProfileSkeleton, UserProfileSkeleton } from '../Skeletons/index'
 import { useSelector } from "react-redux";
 import { useToast } from '../components/Toast';
+import parse from "html-react-parser";
 
 const Profile = () => {
     const [tweets, setTweets] = useState([]);
@@ -29,11 +30,27 @@ const Profile = () => {
             return
         }
 
+        setTweets(tweets.map(tweet => {
+            if(tweet._id === tweetId){
+                if(tweet.isLikedByCurrentUser)
+                    return {
+                        ...tweet,
+                        likesCount: tweet.likesCount - 1,
+                        isLikedByCurrentUser: false
+                    }
+                else
+                    return {
+                        ...tweet,
+                        likesCount: tweet.likesCount + 1,
+                        isLikedByCurrentUser: true
+                    }
+            }
+
+            return tweet
+        }))
+
         try {
             await service.updateLikes({ tweetId })
-
-            const data = await service.getUserPosts({ username })
-            setTweets(data.data)
         } catch (error) {
             console.log(error)
         }
@@ -43,6 +60,7 @@ const Profile = () => {
         (async() => {
             try {
                 const data = await service.getUserPosts({ username })
+                console.log(data)
 
                 if(!data.data.length)
                     navigate('/')
@@ -116,7 +134,7 @@ const Profile = () => {
                                 <div className="grid gap-6">
                                     {tweets.map((tweet, index) => (
                                         <div 
-                                            key={tweet._id} 
+                                            key={tweet?._id} 
                                             className={`group bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/30 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden animate-in fade-in slide-in-from-bottom-4`}
                                             style={{
                                                 animationDelay: `${index * 100}ms`,
@@ -124,19 +142,21 @@ const Profile = () => {
                                             }}
                                         >
                                             {/* Subtle gradient border on hover */}
-                                            <div className='absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/10 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none'></div>
+                                            <div 
+                                            className='absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-purple-500/10 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none'></div>
                                             
-                                            <div className='relative p-6'>
+                                            <div 
+                                            className='relative p-6'>
                                                 <Post 
-                                                    avatar={tweet.owner[0].avatar} 
-                                                    username={tweet.owner[0].username} 
-                                                    fullName={tweet.owner[0].fullName} 
-                                                    createdAt={useTimeAgo(tweet.updatedAt)} 
-                                                    content={tweet.content} 
-                                                    image={tweet.image || ""}
-                                                    likesCount={tweet.likesCount}
-                                                    isLikedByCurrentUser={tweet.isLikedByCurrentUser}
-                                                    onLikeToggle={() => submit(tweet._id)} 
+                                                    avatar={tweet?.owner[0]?.avatar} 
+                                                    username={tweet?.owner[0]?.username} 
+                                                    fullName={tweet?.owner[0]?.fullName} 
+                                                    createdAt={useTimeAgo(tweet?.updatedAt)} 
+                                                    content={tweet?.content} 
+                                                    image={tweet?.image || ""}
+                                                    likesCount={tweet?.likesCount}
+                                                    isLikedByCurrentUser={tweet?.isLikedByCurrentUser}
+                                                    onLikeToggle={() => submit(tweet?._id)} 
                                                 />
                                             </div>
                                         </div>

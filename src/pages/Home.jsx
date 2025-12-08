@@ -1,11 +1,12 @@
-import { TextEditor, FloatingActionButton } from '../components/index';
-import Post from '../components/Post';
-import service from '../service/config';
-import { useEffect, useState, useRef } from 'react';
-import useTimeAgo from '../hooks/useTimeAgo';
+import { TextEditor, FloatingActionButton } from '../components/index'
+import Post from '../components/Post'
+import service from '../service/config'
+import { useEffect, useState, useRef } from 'react'
+import useTimeAgo from '../hooks/useTimeAgo'
 import { HomeSkeleton } from '../Skeletons/index'
-import { useSelector } from "react-redux";
-import { useToast } from '../components/Toast';
+import { useSelector } from "react-redux"
+import { useToast } from '../components/Toast'
+import parse from "html-react-parser"
 
 const Home = () => {
     const [tweets, setTweets] = useState([]);
@@ -18,10 +19,26 @@ const Home = () => {
     const submit = async(tweetId) => {
         try {
             if(authStatus){
-                await service.updateLikes({ tweetId })
+                setTweets(tweets.map(tweet => {
+                    if(tweet._id === tweetId){
+                        if(tweet.isLikedByCurrentUser)
+                            return {
+                                ...tweet,
+                                likesCount: tweet.likesCount - 1,
+                                isLikedByCurrentUser: false
+                            }
+                        else
+                            return {
+                                ...tweet,
+                                likesCount: tweet.likesCount + 1,
+                                isLikedByCurrentUser: true
+                            }
+                    }
 
-                const data = await service.getPosts();
-                setTweets(data?.data);
+                    return tweet
+                }))
+
+                await service.updateLikes({ tweetId })
             }else{
                 warning("Please sign in to like posts", 5000);
             }
@@ -117,15 +134,15 @@ const Home = () => {
                                         
                                         <div className='relative p-6'>
                                             <Post 
-                                                avatar={tweet.owner[0].avatar} 
-                                                username={tweet.owner[0].username} 
-                                                fullName={tweet.owner[0].fullName} 
-                                                createdAt={useTimeAgo(tweet.updatedAt)} 
-                                                content={tweet.content} 
-                                                image={tweet.image || ""}
-                                                likesCount={tweet.likesCount}
-                                                isLikedByCurrentUser={tweet.isLikedByCurrentUser}
-                                                onLikeToggle={() => submit(tweet._id)}
+                                                avatar={tweet?.owner[0]?.avatar} 
+                                                username={tweet?.owner[0]?.username} 
+                                                fullName={tweet?.owner[0]?.fullName} 
+                                                createdAt={useTimeAgo(tweet?.updatedAt)} 
+                                                content={tweet?.content} 
+                                                image={tweet?.image || ""}
+                                                likesCount={tweet?.likesCount}
+                                                isLikedByCurrentUser={tweet?.isLikedByCurrentUser}
+                                                onLikeToggle={() => submit(tweet?._id)}
                                             />
                                         </div>
                                     </div>
