@@ -57,6 +57,12 @@ const TextEditor = ({ onUpdate, content = "", contentId = "", isUpdatingPost = f
         };
 
         try {
+            const { content } = data
+
+            const _id = `temp-${Date.now()}-${Math.random()}`
+
+            onUpdate(content, _id)
+
             let compressedFile
             if(file){
                 compressedFile = await imageCompression(file, options);
@@ -64,12 +70,6 @@ const TextEditor = ({ onUpdate, content = "", contentId = "", isUpdatingPost = f
                 const compressedBlob = URL.createObjectURL(compressedFile);
                 setPreviewUrl(compressedBlob);
             }
-
-            const { content } = data
-
-            const _id = `temp-${Date.now()}-${Math.random()}`
-
-            onUpdate(content, previewUrl, _id)
 
             const tweet = await service.uploadTweet({ content, image: compressedFile })
 

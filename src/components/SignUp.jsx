@@ -131,6 +131,30 @@ const SignUp = ({}) => {
               </div>
             </div>
 
+            {/* Username Field */}
+            <div className="space-y-2">
+              <Label labelFor="username" text="Username" />
+              <div className="relative group">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors" />
+                <InputBox
+                  id="username"
+                  autoComplete="username"
+                  placeholder="Enter Username"
+                  type="text"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
+                  {...register("username", {
+                    required: true,
+                    validate: {
+                      matchPattern: (value) => (
+                        (/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/igm).test(value) ||
+                        "Username must be valid"
+                      )
+                    }
+                  })}
+                />
+              </div>
+            </div>
+
             {/* Password Field */}
             <div className="space-y-2">
               <Label labelFor="password" text="Password" />

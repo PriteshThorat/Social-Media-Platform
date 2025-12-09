@@ -25,11 +25,11 @@ const Home = () => {
         setUpdatingContentId(tweetId)
     }
 
-    const createPost = (content, image, _id) => {
+    const createPost = (content, _id) => {
         setTweets(tweet => [{
             _id,
             content,
-            image,
+            image: "",
             owner: [
                 {
                     _id: user?._id,
@@ -256,7 +256,7 @@ const Home = () => {
                         {/* TextEditor Content */}
                         <div className="p-6 max-h-[70vh] overflow-y-auto">
                             <TextEditor 
-                            onUpdate={(content, image, _id) => createPost(content, image, _id)} 
+                            onUpdate={(content, _id) => createPost(content, _id)} 
                             content={updatingContent} 
                             contentId={updatingContentId}
                             isUpdatingPost={isUpdatingPost}
