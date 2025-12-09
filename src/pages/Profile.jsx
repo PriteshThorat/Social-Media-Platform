@@ -1,28 +1,60 @@
-import { IoMdArrowRoundBack } from "react-icons/io";
-import { Profile as ProfileInfo } from '../components/index';
-import Post from '../components/Post';
-import service from '../service/config';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import useTimeAgo from '../hooks/useTimeAgo';
-import { ThemeBtn } from '../components/index';
+import { IoMdArrowRoundBack } from "react-icons/io"
+import { Profile as ProfileInfo } from '../components/index'
+import Post from '../components/Post'
+import service from '../service/config'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import useTimeAgo from '../hooks/useTimeAgo'
+import { TextEditor } from '../components/index'
+import { ThemeBtn } from '../components/index'
 import { TweetProfileSkeleton, UserProfileSkeleton } from '../Skeletons/index'
-import { useSelector } from "react-redux";
-import { useToast } from '../components/Toast';
-import parse from "html-react-parser";
+import { useSelector } from "react-redux"
+import { useToast } from '../components/Toast'
 
 const Profile = () => {
     const [tweets, setTweets] = useState([]);
     const [user, setUser] = useState({})
     const [loading, setLoading] = useState(true);
-
+    const [isUpdatingPost, setIsUpdatingPost] = useState(false)
+    const [updatingContent, setUpdatingContent] = useState("")
+    const [updatingContentId, setUpdatingContentId] = useState("")
     const authStatus = useSelector(state => state?.auth?.status);
     const { warning, ToastContainer } = useToast();
-
     const navigate = useNavigate();
-
     const { username } = useParams();
+
+    const toggleTextEditor = (tweetId, content) => {
+        setIsUpdatingPost(true)
+        setUpdatingContent(content)
+        setUpdatingContentId(tweetId)
+    }
+
+    const updatePost = (tweetId, content) => {
+        setTweets(tweets.map(tweet => {
+            if(tweet._id === tweetId)
+                return {
+                    ...tweet,
+                    content
+                }
+
+            return tweet
+        }))
+
+        setIsUpdatingPost(false)
+        setUpdatingContent("")
+        setUpdatingContentId("")
+    }
+
+    const deletePost = async(tweetId) => {
+        try {
+            setTweets(tweets.filter(tweet => tweet._id !== tweetId))
+
+            await service.deletePost({ tweetId })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const submit = async(tweetId) => {
         if(!authStatus){
@@ -94,6 +126,51 @@ const Profile = () => {
                 </div>
             </div>
             
+            {isUpdatingPost && (
+                <>
+                {/* Backdrop with blur effect */}
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-all duration-300 animate-fade-in"></div>
+
+                {/* Modal Container */}
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-scale-in">
+                    <div className="relative w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+                    {/* Header with X button */}
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                        Update Post
+                        </h2>
+                        <button 
+                        onClick={() => setIsUpdatingPost(false)}
+                        className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 group">
+                        <svg
+                            className="w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                        </button>
+                    </div>
+
+                    {/* TextEditor Content */}
+                    <div className="p-6 max-h-[70vh] overflow-y-auto">
+                        <TextEditor 
+                        onUpdate={(tweetId, content) => updatePost(tweetId, content)} 
+                        content={updatingContent} 
+                        contentId={updatingContentId}
+                        isUpdatingPost={true} />
+                    </div>
+                    </div>
+                </div>
+                </>
+            )}
+
             {/* Main Content */}
             <div className='max-w-4xl mx-auto px-4 py-8'>
                 {/* Profile Section */}
@@ -157,6 +234,8 @@ const Profile = () => {
                                                     likesCount={tweet?.likesCount}
                                                     isLikedByCurrentUser={tweet?.isLikedByCurrentUser}
                                                     onLikeToggle={() => submit(tweet?._id)} 
+                                                    onDeleteToggle={() => deletePost(tweet?._id)}
+                                                    onUpdateToggle={() => toggleTextEditor(tweet?._id, tweet?.content)}
                                                 />
                                             </div>
                                         </div>

@@ -6,7 +6,9 @@ import imageCompression from "browser-image-compression";
 import { useSelector } from "react-redux";
 import { useToast } from './Toast';
 
-const TextEditor = ({ onUpdate }) => {
+const defaultFn = () => {}
+
+const TextEditor = ({ onUpdate, content = "", contentId = "", isUpdatingPost = false, postUpdate = defaultFn}) => {
     const [previewUrl, setPreviewUrl] = useState('')
     const [file, setFile] = useState(null)
     const [error, setError] = useState('')
@@ -16,9 +18,29 @@ const TextEditor = ({ onUpdate }) => {
 
     const { register, handleSubmit, setValue, control, getValues, reset } = useForm({
         defaultValues: {
-            content: ""
+            content
         }
     });
+
+    const updateTweet = async(data) => {
+        setError('')
+
+        try {
+            const { content } = data
+
+            onUpdate(contentId, content)
+
+            await service.updatePost({ content, tweetId: contentId })
+
+            reset({ content: ""}); 
+            setValue("content", "");
+
+            setError('')
+        } catch (err) {
+            setError(err || 'An error occurred')
+            console.log(err)
+        }
+    }
 
     const postTweet = async(data) => {
         if(!authStatus){
@@ -45,7 +67,13 @@ const TextEditor = ({ onUpdate }) => {
 
             const { content } = data
 
-            await service.uploadTweet({ content, image: compressedFile })
+            const _id = `temp-${Date.now()}-${Math.random()}`
+
+            onUpdate(content, previewUrl, _id)
+
+            const tweet = await service.uploadTweet({ content, image: compressedFile })
+
+            postUpdate(tweet.data, _id)
 
             reset({ content: "", image: "" }); 
             setValue("content", "");
@@ -54,9 +82,6 @@ const TextEditor = ({ onUpdate }) => {
             setPreviewUrl("");
             setError('')
             setFile(null);
-
-
-            onUpdate()
         } catch (err) {
             setError(err || 'An error occurred')
             console.log(err)
@@ -66,7 +91,7 @@ const TextEditor = ({ onUpdate }) => {
     return (
         <>
             <ToastContainer />
-            <form onSubmit={handleSubmit(postTweet)} className="space-y-4">
+            <form onSubmit={handleSubmit(isUpdatingPost ? updateTweet: postTweet)} className="space-y-4">
             {/* Text Editor */}
             <div className="relative">
                 <TinyMCE 
@@ -115,48 +140,52 @@ const TextEditor = ({ onUpdate }) => {
             
             {/* Actions Bar */}
             <div className='flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700'>
-                {/* Upload Section */}
-                <div className="flex items-center gap-3">
-                    <label 
-                        htmlFor='upload-image'
-                        className="group flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-all duration-200 cursor-pointer hover:scale-105"
-                    >
-                        <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Add Photo
-                    </label>
-                    <InputBox 
-                        id="upload-image"
-                        autocomplete="upload-image"
-                        type="file" 
-                        className="hidden"
-                        accept="image/png, image/jpg, image/jpeg, image/gif"
-                        {
-                            ...register("image", {
-                                required: false
-                            })
-                        }
-                        onChange={(e) => {
-                            if (e.target.files.length > 0) {
-                                const file = e.target.files[0];
-                                setPreviewUrl(URL.createObjectURL(file));
-                                setFile(file)
-                            }
-                            setValue("image", e.target.files);
-                        }} 
-                    />
-                    
-                    {previewUrl && (
-                        <span className="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
-                            Image ready
-                        </span>
-                    )}
-                </div>
+                {
+                    !isUpdatingPost && (
+                        /* Upload Section */
+                        <div className="flex items-center gap-3">
+                            <label 
+                                htmlFor='upload-image'
+                                className="group flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-all duration-200 cursor-pointer hover:scale-105"
+                            >
+                                <svg className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                Add Photo
+                            </label>
+                            <InputBox 
+                                id="upload-image"
+                                autocomplete="upload-image"
+                                type="file" 
+                                className="hidden"
+                                accept="image/png, image/jpg, image/jpeg, image/gif"
+                                {
+                                    ...register("image", {
+                                        required: false
+                                    })
+                                }
+                                onChange={(e) => {
+                                    if (e.target.files.length > 0) {
+                                        const file = e.target.files[0];
+                                        setPreviewUrl(URL.createObjectURL(file));
+                                        setFile(file)
+                                    }
+                                    setValue("image", e.target.files);
+                                }} 
+                            />
+                            
+                            {previewUrl && (
+                                <span className="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full">
+                                    Image ready
+                                </span>
+                            )}
+                        </div>
+                    )
+                }
                 
                 {/* Post Button */}
                 <Button 
-                    text="Share Post" 
+                    text={isUpdatingPost ? "Update Post" : "Share Post"}
                     variant="primary"
                     size="medium"
                     icon={

@@ -6,15 +6,72 @@ import useTimeAgo from '../hooks/useTimeAgo'
 import { HomeSkeleton } from '../Skeletons/index'
 import { useSelector } from "react-redux"
 import { useToast } from '../components/Toast'
-import parse from "html-react-parser"
 
 const Home = () => {
+    const user = useSelector((state) => state?.auth?.user);
     const [tweets, setTweets] = useState([]);
     const [loading, setLoading] = useState(true);
-    const createPostRef = useRef(null);
+    const createPostRef = useRef(null)
+    const authStatus = useSelector(state => state?.auth?.status)
+    const { warning, ToastContainer } = useToast()
+    const [isUpdatingPost, setIsUpdatingPost] = useState(false)
+    const [isEditingContent, setIsEditingContent] = useState(false)
+    const [updatingContent, setUpdatingContent] = useState("")
+    const [updatingContentId, setUpdatingContentId] = useState("")
 
-    const authStatus = useSelector(state => state?.auth?.status);
-    const { warning, ToastContainer } = useToast();
+    const toggleTextEditor = (tweetId, content) => {
+        setIsUpdatingPost(true)
+        setUpdatingContent(content)
+        setUpdatingContentId(tweetId)
+    }
+
+    const createPost = (content, image, _id) => {
+        setTweets(tweet => [{
+            _id,
+            content,
+            image,
+            owner: [
+                {
+                    _id: user?._id,
+                    username: user?.username,
+                    fullName: user?.fullName,
+                    avatar: user?.avatar
+                }
+            ],
+            createdAt: (new Date()).toISOString(),
+            updatedAt: (new Date()).toISOString(),
+            likesCount: 0,
+            isLikedByCurrentUser: false
+        }, ...tweet])
+
+        setIsEditingContent(false)
+    }
+
+    const updatePost = (tweetId, content) => {
+        setTweets(tweets.map(tweet => {
+            if(tweet._id === tweetId)
+                return {
+                    ...tweet,
+                    content
+                }
+
+            return tweet
+        }))
+
+        setIsUpdatingPost(false)
+        setUpdatingContent("")
+        setUpdatingContentId("")
+    }
+
+    const deletePost = async(tweetId) => {
+        try {
+            setTweets(tweets.filter(tweet => tweet._id !== tweetId))
+
+            await service.deletePost({ tweetId })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const submit = async(tweetId) => {
         try {
@@ -47,13 +104,22 @@ const Home = () => {
         }
     }
 
-    const update = async() => {
-        try {
-            const data = await service.getPosts();
-            setTweets(data?.data);
-        } catch (error) {
-            console.log(error)
-        }
+    const postUpdate = (data, _id) => {
+        setTweets(prevTweets => prevTweets.map(tweet => {
+            if(tweet._id === _id){
+                return {
+                    ...tweet,
+                    image: data.image,
+                    _id: data._id,
+                    createdAt: data.createdAt,
+                    updatedAt: data.updatedAt
+                }
+            }
+
+            return tweet
+        }))
+
+        console.log("Tweet _id and image get updated. Now you can delete post.")
     }
 
     const scrollToCreatePost = () => {
@@ -86,19 +152,120 @@ const Home = () => {
                 <div className='mb-8' ref={createPostRef}>
                     <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/20 dark:border-gray-700/30 shadow-sm rounded-2xl p-6 transition-all duration-300 hover:shadow-lg'>
                         <div className='flex items-center gap-4 mb-4'>
-                            <div className='w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg'>
-                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className='w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg transform transition-transform duration-300 hover:scale-110 hover:rotate-12'>
+                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                 </svg>
                             </div>
-                            <div>
-                                <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>What's on your mind?</h2>
-                                <p className='text-sm text-gray-500 dark:text-gray-400'>Share your thoughts with the community</p>
+                            <div
+                                onClick={() => setIsEditingContent(true)} 
+                                className='flex-1 cursor-pointer group'
+                            >
+                                <div className='bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-800 rounded-xl p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 transition-all duration-300 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md hover:scale-[1.02]'>
+                                    <h2 className='text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300'>
+                                        What's on your mind?
+                                    </h2>
+                                    <p className='text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2'>
+                                        <svg className="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                        </svg>
+                                        Share your thoughts with the community
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <TextEditor onUpdate={update}/>
                     </div>
                 </div>
+
+                {isUpdatingPost && (
+                    <>
+                    {/* Backdrop with blur effect */}
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-all duration-300 animate-fade-in"></div>
+
+                    {/* Modal Container */}
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-scale-in">
+                        <div className="relative w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+                        {/* Header with X button */}
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                            Update Post
+                            </h2>
+                            <button 
+                            onClick={() => setIsUpdatingPost(false)}
+                            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 group">
+                            <svg
+                                className="w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                            </button>
+                        </div>
+
+                        {/* TextEditor Content */}
+                        <div className="p-6 max-h-[70vh] overflow-y-auto">
+                            <TextEditor 
+                            onUpdate={(tweetId, content) => updatePost(tweetId, content)} 
+                            content={updatingContent} 
+                            contentId={updatingContentId}
+                            isUpdatingPost={isUpdatingPost} />
+                        </div>
+                        </div>
+                    </div>
+                    </>
+                )}
+                {isEditingContent && (
+                    <>
+                    {/* Backdrop with blur effect */}
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-all duration-300 animate-fade-in"></div>
+
+                    {/* Modal Container */}
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-scale-in">
+                        <div className="relative w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+                        {/* Header with X button */}
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                            Update Post
+                            </h2>
+                            <button 
+                            onClick={() => setIsEditingContent(false)}
+                            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 group">
+                            <svg
+                                className="w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                            </button>
+                        </div>
+
+                        {/* TextEditor Content */}
+                        <div className="p-6 max-h-[70vh] overflow-y-auto">
+                            <TextEditor 
+                            onUpdate={(content, image, _id) => createPost(content, image, _id)} 
+                            content={updatingContent} 
+                            contentId={updatingContentId}
+                            isUpdatingPost={isUpdatingPost}
+                            postUpdate={(tweet, _id) => postUpdate(tweet, _id)} />
+                        </div>
+                        </div>
+                    </div>
+                    </>
+                )}
 
                 {/* Posts Feed */}
                 <div className='space-y-6'>
@@ -143,6 +310,8 @@ const Home = () => {
                                                 likesCount={tweet?.likesCount}
                                                 isLikedByCurrentUser={tweet?.isLikedByCurrentUser}
                                                 onLikeToggle={() => submit(tweet?._id)}
+                                                onDeleteToggle={() => deletePost(tweet?._id)}
+                                                onUpdateToggle={() => toggleTextEditor(tweet?._id, tweet?.content)}
                                             />
                                         </div>
                                     </div>
