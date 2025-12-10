@@ -263,6 +263,28 @@ export class AuthService {
             throw error;
         }
     }
+
+    async isUsernameUnique({ username }) {
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow"
+        };
+
+        try {
+            const response = await fetch(`${conf.vercelUrl}/users/is-username-unique?username=${username}`, requestOptions);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.action || "Unknown error");
+            }
+
+            const result = await response.json();
+
+            return result;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
 };
 
 const authService = new AuthService;
