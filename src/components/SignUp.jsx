@@ -173,13 +173,7 @@ const SignUp = ({}) => {
                   type="text"
                   className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500"
                   {...register("username", {
-                    required: true,
-                    validate: {
-                      matchPattern: (value) =>
-                        /^(?!.*\.\.)(?!.*\.$)(?!.*[A-Z])[^\W][\w.]{0,29}$/gim.test(
-                          value
-                        ) || "Username must be valid",
-                    },
+                    required: true
                   })}
                   onChange={(e) => {
                     register("username").onChange(e);
