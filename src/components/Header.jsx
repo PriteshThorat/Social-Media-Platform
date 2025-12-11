@@ -35,17 +35,16 @@ const Header = () => {
     const logoutSession = async(e) => {
         e.preventDefault()
         
+        setOpen(false)
         try {
-            await authService.logout()
+          navigate('/login')
+          await authService.logout()
 
-            dispatch(logout())
-            navigate('/login')
+          dispatch(logout())
         } catch (error) {
             console.log(error)
-        } finally {
-            setOpen(false)
         }
-    };
+    }
 
     return (
        <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300">

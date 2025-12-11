@@ -1,6 +1,6 @@
 import Label from './Label';
 import InputBox from './InputBox';
-import { login as authLogin } from '../store/authSlice';
+import { login as authLogin, logout } from '../store/authSlice';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import authService from '../service/auth';
@@ -12,13 +12,12 @@ import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
     const { register, handleSubmit } = useForm();
-    
     const [error, setError] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
 
     const login = async(data) => {
+        dispatch(logout())
         setError("");
 
         const { email, password } = data
@@ -26,9 +25,8 @@ const Login = () => {
             const user = await authService.login({ email, password });
 
             if (user?.data?.user) {
-                // Store the actual user object in Redux so UI updates immediately
-                dispatch(authLogin(user.data.user));
-                navigate("/");
+                dispatch(authLogin(user.data.user))
+                navigate("/")
             }
         }catch(error){
             if(`${error.toString()}` === "Error: VERIFY_EMAIL"){

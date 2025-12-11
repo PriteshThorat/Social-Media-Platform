@@ -1,5 +1,5 @@
 import { Header } from './components/index';
-import { Outlet, useLocation, ScrollRestoration } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 const Layout = () => {
     const location = useLocation();
@@ -10,7 +10,6 @@ const Layout = () => {
         <>
             {!isProfilePage && <Header/>}
             <Outlet />
-            <ScrollRestoration />
         </>
     );
 };

@@ -89,10 +89,13 @@ const Profile = () => {
     }
 
     useEffect(() => {
+        window.scrollTo(0, 0); // always top when visiting profile
+    }, []);
+
+    useEffect(() => {
         (async() => {
             try {
                 const data = await service.getUserPosts({ username })
-                console.log(data)
 
                 if(!data.data.length)
                     navigate('/')

@@ -4,13 +4,17 @@ import service from '../service/config'
 import { useEffect, useState, useRef } from 'react'
 import useTimeAgo from '../hooks/useTimeAgo'
 import { HomeSkeleton } from '../Skeletons/index'
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useToast } from '../components/Toast'
+import { addTweets } from '../store/authSlice'
+import { useNavigationType } from "react-router-dom";
+import { setHomeScroll } from '../store/uiSlice'
 
 const Home = () => {
-    const user = useSelector((state) => state?.auth?.user);
-    const [tweets, setTweets] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const user = useSelector((state) => state?.auth?.user)
+    const tweetsData = useSelector(state => state?.auth?.tweets)
+    const [tweets, setTweets] = useState([])
+    const [loading, setLoading] = useState(true)
     const createPostRef = useRef(null)
     const authStatus = useSelector(state => state?.auth?.status)
     const { warning, ToastContainer } = useToast()
@@ -18,6 +22,23 @@ const Home = () => {
     const [isEditingContent, setIsEditingContent] = useState(false)
     const [updatingContent, setUpdatingContent] = useState("")
     const [updatingContentId, setUpdatingContentId] = useState("")
+    const dispatch = useDispatch()
+    const navType = useNavigationType()
+    const homeScroll = useSelector((state) => state.ui.homeScroll)
+    const [restored, setRestored] = useState(false)
+
+    useEffect(() => {
+        if (navType === "POP" && tweets.length > 0 && !restored) {
+            window.scrollTo(0, homeScroll);
+            setRestored(true);
+        }
+    }, [navType, homeScroll, tweets, restored]);
+
+    useEffect(() => {
+        return () => {
+            dispatch(setHomeScroll(window.scrollY));
+        };
+    }, []);
 
     const toggleTextEditor = (tweetId, content) => {
         setIsUpdatingPost(true)
@@ -131,17 +152,28 @@ const Home = () => {
 
     useEffect(() => {
         (async() => {
-            try {
-                const data = await service.getPosts()
+            console.log("Home Outside: ", tweetsData)
+            if(!tweetsData.length){
+                console.log("Home Inside: ", tweetsData)
+                try {
+                    const data = await service.getPosts()
 
-                setTweets(data?.data)
-            } catch(error) {
-                console.log(error)
-            } finally {
-                setLoading(false)
+                    dispatch(addTweets(data?.data))
+                } catch(error) {
+                    console.log(error)
+                } finally {
+                    setLoading(false)
+                }
             }
-        })();
-    }, []);
+        })()
+    }, [])
+
+    useEffect(() => {
+        if(tweetsData){
+            setTweets(tweetsData)
+            setLoading(false)
+        }
+    }, [tweetsData])
     
     return (
         <>

@@ -14,16 +14,24 @@ const AuthLayout = ({ authentication = true }) => {
     const authStatus = useSelector(state => state?.auth?.status);
 
     useEffect(() => {
+        console.log("In AuthLayout")
         (async() => {
             try {
-                await auth.refreshAccessToken()
-                
-                const user = await auth.getCurrentUser()
+                if(!authStatus){
+                    let user = await auth.getCurrentUser()
 
-                if(user?.data)
-                    dispatch(login(user.data));
+                    if(!user || !user.data){
+                        await auth.refreshAccessToken()
+                        user = await auth.getCurrentUser()
+                    }
+
+                    if(user?.data)
+                        dispatch(login(user.data));
+                }
             } catch (error) {
                 console.log(error)
+            } finally {
+                setIsLoading(false)
             }
         })()
     }, [])

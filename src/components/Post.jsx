@@ -1,9 +1,8 @@
 import { DislikeBtn, LikeBtn, ProfilePicture } from "./index";
 import parse from "html-react-parser";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { TextEditor } from "../components/index";
 
 const Post = ({
   avatar,
@@ -18,8 +17,8 @@ const Post = ({
   onDeleteToggle,
   onUpdateToggle,
 }) => {
-  const [showOptions, setShowOptions] = useState(false);
-  const user = useSelector((state) => state?.auth?.user);
+  const [showOptions, setShowOptions] = useState(false)
+  const user = useSelector((state) => state?.auth?.user)
 
   return (
     <div className="group w-full">

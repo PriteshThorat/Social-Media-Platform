@@ -1,25 +1,25 @@
-import { ProfilePicture, Button } from './index';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { ProfilePicture, Button } from './index'
+import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 import auth from '../service/auth'
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { login as authLogin } from '../store/authSlice';
-import imageCompression from "browser-image-compression";
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { preChangeAvatar, postChangeAvatar } from '../store/authSlice'
+import imageCompression from "browser-image-compression"
 
 const AddProfileImg = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const [file, setFile] = useState(null)
-    const [previewUrl, setPreviewUrl] = useState('');
-    const [error, setError] = useState("");
+    const [previewUrl, setPreviewUrl] = useState('')
+    const [error, setError] = useState("")
      
-    const user = useSelector(state => state.auth.user);
+    const user = useSelector(state => state.auth.user)
     const fullName = user?.fullName
     const avatar = user?.avatar
 
-    const { register } = useForm();
+    const { register } = useForm()
 
     const submit = async(e) => {
         e.preventDefault()
@@ -30,27 +30,27 @@ const AddProfileImg = () => {
             maxWidthOrHeight: 1024, 
             initialQuality: 0.7,       
             useWebWorker: true
-        };
+        }
 
+        navigate("/")
         try {
-            const compressedFile = await imageCompression(file, options);
+            const compressedFile = await imageCompression(file, options)
 
-            const compressedBlob = URL.createObjectURL(compressedFile);
-            setPreviewUrl(compressedBlob);
+            const compressedBlob = URL.createObjectURL(compressedFile)
+            setPreviewUrl(compressedBlob)
+
+            dispatch(preChangeAvatar(previewUrl))
 
             const userData = await auth.updateAvatar({ avatar: compressedFile })
-
-            if(userData){
-                dispatch(authLogin(userData))
-
-                navigate("/")
-            }
+            
+            dispatch(postChangeAvatar(userData.avatar))
+            console.log("Avatar updated from database also")
         } catch (error) {
             console.log(error)
 
             setError(error)
         }
-    };
+    }
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4">
