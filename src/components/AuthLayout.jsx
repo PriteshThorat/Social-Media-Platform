@@ -14,7 +14,6 @@ const AuthLayout = ({ authentication = true }) => {
     const authStatus = useSelector(state => state?.auth?.status);
 
     useEffect(() => {
-        console.log("In AuthLayout")
         (async() => {
             try {
                 if(!authStatus){

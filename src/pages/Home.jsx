@@ -152,9 +152,7 @@ const Home = () => {
 
     useEffect(() => {
         (async() => {
-            console.log("Home Outside: ", tweetsData)
             if(!tweetsData.length){
-                console.log("Home Inside: ", tweetsData)
                 try {
                     const data = await service.getPosts()
 
