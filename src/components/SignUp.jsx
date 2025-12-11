@@ -176,7 +176,7 @@ const SignUp = ({}) => {
                     required: true,
                     validate: {
                       matchPattern: (value) =>
-                        /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/gim.test(
+                        /^(?!.*\.\.)(?!.*\.$)(?!.*[A-Z])[^\W][\w.]{0,29}$/gim.test(
                           value
                         ) || "Username must be valid",
                     },
@@ -200,7 +200,7 @@ const SignUp = ({}) => {
                     </>
                   ) : usernameMessage ? (
                     <>
-                      {usernameMessage.includes("Username is unique") ? (
+                      {usernameMessage.includes("Username is available") ? (
                         <>
                           <div className="flex items-center justify-center w-5 h-5 bg-green-100 dark:bg-green-900/30 rounded-full">
                             <Check className="w-3 h-3 text-green-600 dark:text-green-400" />

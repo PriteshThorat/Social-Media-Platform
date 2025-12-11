@@ -48,7 +48,7 @@ const Post = ({
                 {fullName}
               </Link>
               <span className="text-gray-500 dark:text-gray-400 text-sm">
-                @{username}
+                @{username.toLowerCase()}
               </span>
               <span className="text-gray-300 dark:text-gray-600">•</span>
               <span className="text-gray-500 dark:text-gray-400 text-sm hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200">
