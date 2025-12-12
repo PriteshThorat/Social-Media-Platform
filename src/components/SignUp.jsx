@@ -32,20 +32,17 @@ const getPasswordStrength = (password) => {
 
 const SignUp = ({}) => {
   const { register, handleSubmit, watch } = useForm()
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-
   const password = watch("password")
   const passwordStrength = getPasswordStrength(password)
-
   const [username, setUsername] = useState("")
   const [usernameMessage, setUsernameMessage] = useState("")
   const [isCheckigUsername, setIsCheckigUsername] = useState(false)
   const debounced = useDebounceCallback(setUsername, 300)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -68,7 +65,8 @@ const SignUp = ({}) => {
   }, [username])
 
   const signup = async (data) => {
-    setError("");
+    setError("")
+    setIsSubmitting(true)
 
     try {
       const { fullName, email, username, password } = data;
@@ -91,6 +89,8 @@ const SignUp = ({}) => {
       }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -320,9 +320,15 @@ const SignUp = ({}) => {
 
             {/* Submit Button */}
             <button
+              disabled={isSubmitting}
               type="submit"
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center space-x-2 group"
             >
+              {
+                isSubmitting && (
+                  <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                )
+              }
               <span>Create Account</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>

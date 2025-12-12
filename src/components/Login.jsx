@@ -7,7 +7,7 @@ import authService from '../service/auth';
 import { useForm } from 'react-hook-form';
 import { pass } from '../store/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -15,8 +15,10 @@ const Login = () => {
     const { register, handleSubmit } = useForm();
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const login = async(data) => {
+        setIsSubmitting(true)
         dispatch(logout())
         setError("");
 
@@ -36,6 +38,8 @@ const Login = () => {
             }
 
             setError(error);
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -132,9 +136,15 @@ const Login = () => {
 
                 {/* Submit Button */}
                 <button
+                disabled={isSubmitting}
                 type="submit"
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center space-x-2 group"
                 >
+                    {
+                        isSubmitting && (
+                            <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                        )
+                    }
                 <span>Sign In</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
