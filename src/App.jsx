@@ -65,6 +65,6 @@ function App() {
       size="large"
     />
   );
-};
+}
 
-export default App;
+export default App
