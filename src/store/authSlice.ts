@@ -27,7 +27,7 @@ const authSlice = createSlice({
             state.tweets = action.payload
         },
         removeTweets: state => {
-            state.tweets = null
+            state.tweets = []
         },
         preChangeAvatar: (state, action) => {
             state.user.avatar = action.payload
